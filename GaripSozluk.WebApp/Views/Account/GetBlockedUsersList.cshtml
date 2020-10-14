@@ -1,0 +1,42 @@
+﻿@model IEnumerable<GaripSozluk.Common.ViewModels.User.BlockedUserVM>
+
+@{
+    ViewData["Title"] = "Engellenen kullanıcılar";
+}
+
+<div>
+    <div class="display-4">
+        <span class="text-success">@ViewData["Title"]</span>
+    </div>
+    <br />
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    <a class="btn text-danger m-0 p-0" asp-controller="Account" asp-action="RemoveBlockedUser" asp-route-blockedUserId="@item.Id">X</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

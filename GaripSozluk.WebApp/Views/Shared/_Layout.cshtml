@@ -1,0 +1,251 @@
+﻿@inject ICategoryService CategoryService
+@inject IHeaderService HeaderService
+@{
+
+    int headerId = 0;
+
+    if (Context.Request.Query.ContainsKey("headerId"))
+    {
+        int.TryParse(Context.Request.Query["headerId"].ToString(), out headerId);
+    }
+
+    int categoryId = headerId == 0 ? 1 : (HeaderService.GetHeaderById(User, headerId)?.CategoryId ?? 1);
+
+    if (Context.Request.Query.ContainsKey("categoryId"))
+    {
+        int.TryParse(Context.Request.Query["categoryId"].ToString(), out categoryId);
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-sweetalert/dist/sweetalert.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="nav-fill">
+    <div class="modal fade" id="advancedSearchModal">
+        <form class="mr-auto d-sm-none d-md-block" asp-controller="Home" asp-action="Index" method="post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title display-4 text-success">Detaylı Ara</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="CategoryId" value="@(categoryId>0?categoryId.ToString():"")" />
+                        <input type="hidden" name="HeaderId" value="@(headerId>0?headerId.ToString():"")" />
+                        <input type="hidden" name="PageNumber" value="1" />
+                        <div class="form-group">
+                            <input type="text" class="form-control" data-val="true" name="SearchText" placeholder="Arama yap..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Aralık Başlangıç Tarihi:</label>
+                            <input type="date" class="form-control" name="StartDate" id="searchStartDate" min="2020-01-01" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="form-group">
+                            <label>Aralık Bitiş Tarihi:</label>
+                            <input type="date" class="form-control" name="EndDate" id="searchEndDate" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+                        </div>
+                        <div class="form-group">
+                            <label>Sıralama:</label>
+                            <select name="InvertOrder" class="form-control">
+                                <option value="False">A'dan Z'ye</option>
+                                <option value="True">Z'den A'ya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-outline-success" type="submit">Detaylı Ara</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <nav class="navbar navbar-expand-sm bg-success navbar-dark sticky-top">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+            <img src="https://emojis.wiki/emoji-pics/apple/eye-apple.png" width="30" height="30" class="d-inline-block align-top">
+            GARİP SÖZLÜK
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Home" asp-action="ApiSearch">Api Arama</a>
+                </li>
+            </ul>
+            <form class="mr-auto d-sm-none d-md-block" asp-controller="Home" asp-action="Index" method="post">
+                <div class="input-group">
+                    <input type="text" class="form-control" data-val="true" name="SearchText" placeholder="Arama yap...">
+
+                    <input type="hidden" name="CategoryId" value="@(categoryId>0?categoryId.ToString():"")" />
+                    <input type="hidden" name="HeaderId" value="@(headerId>0?headerId.ToString():"")" />
+                    <input type="hidden" name="PageNumber" value="1" />
+
+                    <div class="dropdown input-group-append">
+                        <button type="button" class="btn btn-outline-light" data-toggle="modal" data-target="#advancedSearchModal">
+                            <i class="fa fa-sort-down"></i>
+                        </button>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-light" type="submit">Ara</button>
+                    </div>
+                </div>
+            </form>
+            <ul class="navbar-nav">
+                <li>
+                    <div class="input-group">
+                        <div class="input-group-append mx-auto">
+                            <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random">Rastgele</a>
+                            @if (Context.User.Identity.IsAuthenticated)
+                            {
+                                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
+                                <a class="nav-link text-white mr-2" asp-controller="Account" asp-action="GetBlockedUsersList">@(Context.User.Identity.Name)</a>
+                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>
+                            }
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-sm bg-success navbar-dark shadow rounded-bottom small">
+        <div class="container justify-content-center">
+            <ul class="nav justify-content-center">
+                @foreach (var category in CategoryService.GetCategories())
+                {
+                    <li class="nav-item">
+                        @if (headerId > 0)
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@category.Value</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@category.Value</a>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="d-flex flex-column-reverse flex-md-row">
+            <div class="col-md-4 col-lg-3 border-right overflow-hidden">
+                <p class="text-muted mt-3 ml-8">@CategoryService.GetCategoryNameById(categoryId)</p>
+                <div class="pl-2">
+                    <ul class="list-group">
+                        @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
+                        {
+                            <li class="list-group-item border-0 m-1 p-1">
+                                <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center"
+                                   asp-controller="Home" asp-action="Index"
+                                   asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
+                                    @item.Title
+                                    @if (item.PostCount > 0)
+                                    {
+                                        <span class="badge badge-success badge-pill">@item.PostCount</span>
+                                    }
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <p class="text-muted mt-3 ml-8"></p>
+            </div>
+            <div class="col-md-8 col-lg-9 h-100 d-inline-block">
+                <div class="container">
+                    @RenderBody()
+
+                </div>
+            </div>
+        </div>
+        <footer class="d-flex flex-row border-top footer text-muted">
+            <div class="col-md-3 text-center">
+                <a class="text-success" href="#">Link 1</a>
+            </div>
+            <div class="col-md-3 text-center">
+                <a class="text-success" href="#">Link 2</a>
+            </div>
+            <div class="col-md-3 text-center">
+                <a class="text-success" href="#">Link 3</a>
+            </div>
+            <div class="col-md-3 text-center">
+                <a class="text-success" href="#">Link 4</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-sweetalert/dist/sweetalert.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @RenderSection("Scripts", required: false)
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#searchStartDate").on("change", function (e) {
+                $("#searchEndDate").attr("min", $(this).val());
+            });
+
+            $.each(errors, function (id, text) {
+
+                if (id == "errorMessage") {
+                    swal({
+                        title: text,
+                        text: "",
+                        type: "error",
+                        //confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Tamam",
+                        closeOnConfirm: false
+                    });
+                } else if (id == "warningMessage") {
+                    swal({
+                        title: text,
+                        text: "",
+                        type: "warning",
+                        confirmButtonText: "Tamam",
+                        closeOnConfirm: false
+                    });
+                } else if (id == "successMessage") {
+                    swal({
+                        title: text,
+                        text: "",
+                        type: "success",
+                        confirmButtonText: "Tamam",
+                        closeOnConfirm: false
+                    });
+                } else if (id == "infoMessage") {
+                    swal({
+                        title: text,
+                        text: "",
+                        type: "info",
+                        confirmButtonText: "Tamam",
+                        closeOnConfirm: false
+                    });
+                } else {
+                    var itemId = "#" + id;
+                    $(itemId).next().html(text).addClass("error field-validation-invalid");
+                }
+                //alert(id + "->" + text);
+            });
+        });
+    </script>
+</body>
+</html>

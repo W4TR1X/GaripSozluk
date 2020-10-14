@@ -1,0 +1,43 @@
+﻿@model GaripSozluk.Common.ViewModels.Api.ApiResultVM
+
+@{
+    ViewData["Title"] = "Api Sonuçları";
+}
+
+
+<div class="row">
+    <div class="col shadow border border-success rounded-lg mt-5 pt-3">
+        <form asp-controller="Home" asp-action="ApiResult" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Başlık</th>
+                        <th>Yazar</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ResultModel.Docs)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>
+                                <p asp-for="@item.Title"></p>
+                            </td>
+                            <td>
+                                @(item.Author_name.FirstOrDefault()??"")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Seçilenleri Kaydet</button>
+            </div>
+        </form>
+        <br />
+    </div>
+</div>

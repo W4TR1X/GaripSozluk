@@ -1,0 +1,46 @@
+﻿@model GaripSozluk.Common.ViewModels.Header.NewHeaderVM
+
+@{
+    ViewData["Title"] = "Yeni Başlık";
+}
+
+<h1 class="display-4 text-success">@ViewData["Title"]</h1>
+
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-controller="Post" asp-action="AddHeader">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input asp-for="HeaderId" />
+
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="@ViewBag.CategorySelectItemList"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <textarea asp-for="Content" class="form-control" style="height:300px"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Başlığı ekleyiver" class="btn btn-success btn-block" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var errors = @Json.Serialize(Model?.ValidationErrors);
+    </script>
+}

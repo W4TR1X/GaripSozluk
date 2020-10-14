@@ -1,0 +1,63 @@
+User
+	+Id
+	Birthdate
+	+CreateDate
+	+UpdateDate
+
+Category
+	+Id
+	Title
+	+CreateDate
+	+UpdateDate
+	
+Header
+	+Id
+	CategoryId
+	Title
+	ClickCount // Görüntülenme
+	UserId
+	+CreateDate
+	+UpdateDate
+
+Post
+	+Id
+	HeaderId
+	UserId
+	Content
+	+CreateDate
+	+UpdateDate
+
+PostRatings
+	+Id
+	PostId
+	UserId
+	IsLiked = 0/1
+	+CreateDate
+	+UpdateDate
+
+BlockedUser
+	UserId
+	BlockedId
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
