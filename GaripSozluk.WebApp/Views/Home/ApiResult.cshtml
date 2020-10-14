@@ -1,41 +1,50 @@
-﻿@model IEnumerable<GaripSozluk.Common.ViewModels.Api.ApiResultVM>
+﻿@model GaripSozluk.Common.ViewModels.Api.ApiResultVM
 
 @{
-    ViewData["Title"] = "ApiResult";
+    ViewData["Title"] = "Api Arama Sonuçları";
+
+    var docs = Model.ResultModel.Docs.Distinct().ToList();
 }
 
-<h1>ApiResult</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.QueryString)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SearchType)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.QueryString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SearchType)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="row">
+    <div class="col shadow border border-success rounded-lg mt-5 pt-3">
+        <div>
+            Bulunan kayıt sayısı(Api cevabı): @Model.ResultModel.Num_found
+        </div>
+        <div>
+            Listelenen kayıt sayısı: @docs.Count()
+        </div>
+        <br />
+        <table class="table table-hover border rounded-lg">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Eser adı</th>
+                    <th>Tarih</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in docs)
+                {
+                    <tr class="apiRecord">
+                        <td>
+                            <input type="checkbox" id="isSelected" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;"/>
+                        </td>
+                        <td>
+                            <label name="Title">@item.Title</label>
+                        </td>
+                        <td>
+                            <label name="Year">@item.First_publish_year</label>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group">
+            <button type="button" class="btn btn-success btn-block">Seçilenleri Kaydet</button>
+        </div>
+    </div>
+</div>
+<br />

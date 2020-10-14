@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GaripSozluk.Business.Services
@@ -22,9 +23,15 @@ namespace GaripSozluk.Business.Services
             if (response.IsSuccessful)
             {
                 content = JsonConvert.DeserializeObject<OpenLibrarySearchJsonVM>(response.Content);
+
+                content.Docs = content.Docs.OrderByDescending(x => x.First_publish_year).ToList();
+
+                content.Docs.ForEach(x => {
+                    x.Author = x.Author_name.FirstOrDefault() ?? "";
+                });
             }
 
-            return new ApiResultVM() { QueryString = authorName, SearchType = Common.Enums.ApiSearchTypeEnum.Author, ResultModel = content };
+            return new ApiResultVM() { QueryString = authorName, SearchType = Common.Enums.ApiSearchTypeEnum.Title, ResultModel = content };
         }
 
         public ApiResultVM SearchTitle(string title)
@@ -39,6 +46,12 @@ namespace GaripSozluk.Business.Services
             if (response.IsSuccessful)
             {
                 content = JsonConvert.DeserializeObject<OpenLibrarySearchJsonVM>(response.Content);
+
+                content.Docs = content.Docs.OrderByDescending(x => x.First_publish_year).ToList();
+
+                content.Docs.ForEach(x => {
+                    x.Author = x.Author_name?.FirstOrDefault() ?? "";                
+                });
             }
 
             return new ApiResultVM() { QueryString = title, SearchType = Common.Enums.ApiSearchTypeEnum.Title, ResultModel = content };

@@ -109,18 +109,19 @@ namespace GaripSozluk.WebApp.Controllers
             else
             {
                 var result = _openLibraryApiService.SearchTitle(queryText);
-                return View(result);
+
+                if (result.ResultModel.Docs.Count>0)
+                {
+                    return View(result);
+                }
+                else
+                {
+                    return Redirect(this.Action<HomeController>(nameof(ApiSearch)));
+                }
+                
             }
         }
-
-        [HttpPost]
-        public IActionResult ApiResult(ApiResultVM model)
-        {
-
-            return View(model);
-        }
-         
-
+            
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -128,4 +129,5 @@ namespace GaripSozluk.WebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
+
 }
