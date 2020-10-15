@@ -100,7 +100,7 @@
                     <div class="input-group">
                         <div class="input-group-append mx-auto">
                             <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random">Rastgele</a>
-                           @if (Context.User.Identity.IsAuthenticated)
+                            @if (Context.User.Identity.IsAuthenticated)
                             {
                                 <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
                                 <a class="nav-link text-white mr-2" asp-controller="Account" asp-action="GetBlockedUsersList">@(Context.User.Identity.Name)</a>
@@ -122,17 +122,24 @@
             <ul class="nav justify-content-center">
                 @foreach (var category in CategoryService.GetCategories())
                 {
+                    var categoryText = category.Value;
+
+                    if (category.Value == "Kitap")
+                    {
+                        categoryText = "<i class=\"fa fa-book\"></i> " + categoryText;
+                    }
+
                     <li class="nav-item">
-                   @if (headerId > 0)
-                    {
-                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@category.Value</a> 
-                    }
-                    else
-                    {
-                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@category.Value</a>
-                    }
+                        @if (headerId > 0)
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@Html.Raw(categoryText)</a> 
+                        }
+                        else
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@Html.Raw(categoryText)</a>
+                        }
                     </li>
-                 }
+                }
             </ul>
         </div>
     </nav>
@@ -146,16 +153,16 @@
                 </p>
                 <div class="pl-2">
                     <ul class="list-group">
-                       @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
+                        @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
                         {
                             <li class="list-group-item border-0 m-1 p-1">
                                 <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center" asp-controller="Home" asp-action="Index" asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
-                                   @item.Title
-                                   @if (item.PostCount > 0)
+                                    @item.Title
+                                    @if (item.PostCount > 0)
                                     {
                                         <span class="badge badge-success badge-pill">@item.PostCount</span>
                                     }
-                                </a>
+                                </a>        
                             </li>
                         }
                     </ul>
