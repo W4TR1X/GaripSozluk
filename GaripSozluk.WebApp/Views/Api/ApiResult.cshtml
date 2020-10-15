@@ -43,7 +43,7 @@
                         <td>
                             @if (isLoggedin)
                             {
-                                <input type="checkbox" id="isSelected" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;" />
+                                <input type="checkbox" class="checkmark" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;" />
                             }
                         </td>
                         <td>
@@ -70,6 +70,11 @@
 <br />
 @section Scripts {
     <script>
+
+        $('.checkmark').on('change', function () {
+            $(this).closest('tr').toggleClass('text-success font-weight-bold alert-success', $(this).is(':checked'));
+        });
+
         $(document).ready(function () {
             $("#sendSelectedOnes").on("click", function (e) {
                 e.preventDefault();
