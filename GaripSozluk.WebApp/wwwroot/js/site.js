@@ -5,8 +5,10 @@
         errorClass: "is-invalid"
     };
 
-    $.validator.setDefaults(settings);
-    $.validator.unobtrusive.options = settings;
+    if (typeof $.validator != "undefined") {
+        $.validator.setDefaults(settings);
+        $.validator.unobtrusive.options = settings;
+    };
 })();
 
 // https://www.w3schools.com/bootstrap4/tryit.asp?filename=trybs_form_validation_needs&stacked=h

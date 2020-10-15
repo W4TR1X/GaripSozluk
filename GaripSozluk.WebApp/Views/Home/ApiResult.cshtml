@@ -30,7 +30,7 @@
                 {
                     <tr class="apiRecord">
                         <td>
-                            <input type="checkbox" id="isSelected" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;"/>
+                            <input type="checkbox" id="isSelected" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;" />
                         </td>
                         <td>
                             <label name="Title">@item.Title</label>
@@ -43,8 +43,24 @@
             </tbody>
         </table>
         <div class="form-group">
-            <button type="button" class="btn btn-success btn-block">Seçilenleri Kaydet</button>
+            <button type="button" id="sendSelectedOnes" class="btn btn-success btn-block">Seçilenleri Kaydet</button>
         </div>
     </div>
 </div>
 <br />
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sendSelectedOnes").on(click, function (e) {
+                e.preventDefault();
+
+                var records = $(".apiRecord");
+
+
+
+
+
+            })
+        });
+    </script>
+}

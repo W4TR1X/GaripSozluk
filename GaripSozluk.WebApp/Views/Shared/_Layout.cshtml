@@ -1,21 +1,18 @@
 ﻿@inject ICategoryService CategoryService
 @inject IHeaderService HeaderService
-@{
+@{ int headerId = 0;
 
-    int headerId = 0;
+                if (Context.Request.Query.ContainsKey("headerId"))
+                {
+                    int.TryParse(Context.Request.Query["headerId"].ToString(), out headerId);
+                }
 
-    if (Context.Request.Query.ContainsKey("headerId"))
-    {
-        int.TryParse(Context.Request.Query["headerId"].ToString(), out headerId);
-    }
+                int categoryId = headerId == 0 ? 1 : (HeaderService.GetHeaderById(User, headerId)?.CategoryId ?? 1);
 
-    int categoryId = headerId == 0 ? 1 : (HeaderService.GetHeaderById(User, headerId)?.CategoryId ?? 1);
-
-    if (Context.Request.Query.ContainsKey("categoryId"))
-    {
-        int.TryParse(Context.Request.Query["categoryId"].ToString(), out categoryId);
-    }
-}
+                if (Context.Request.Query.ContainsKey("categoryId"))
+                {
+                    int.TryParse(Context.Request.Query["categoryId"].ToString(), out categoryId);
+                } }
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,15 +102,13 @@
                             <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random">Rastgele</a>
                             @if (Context.User.Identity.IsAuthenticated)
                             {
-                                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
+                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
                                 <a class="nav-link text-white mr-2" asp-controller="Account" asp-action="GetBlockedUsersList">@(Context.User.Identity.Name)</a>
-                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>
-                            }
+                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a> }
+                                                            else
+                                                            {
+                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>}
                         </div>
                     </div>
                 </li>
@@ -125,17 +120,14 @@
             <ul class="nav justify-content-center">
                 @foreach (var category in CategoryService.GetCategories())
                 {
-                    <li class="nav-item">
-                        @if (headerId > 0)
-                        {
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@category.Value</a>
-                        }
-                        else
-                        {
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@category.Value</a>
-                        }
-                    </li>
-                }
+    <li class="nav-item">
+        @if (headerId > 0)
+        {
+<a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@category.Value</a> }
+                else
+                {
+<a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@category.Value</a>}
+    </li>}
             </ul>
         </div>
     </nav>
@@ -147,18 +139,16 @@
                     <ul class="list-group">
                         @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
                         {
-                            <li class="list-group-item border-0 m-1 p-1">
-                                <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center"
-                                   asp-controller="Home" asp-action="Index"
-                                   asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
-                                    @item.Title
-                                    @if (item.PostCount > 0)
-                                    {
-                                        <span class="badge badge-success badge-pill">@item.PostCount</span>
-                                    }
-                                </a>
-                            </li>
-                        }
+            <li class="list-group-item border-0 m-1 p-1">
+                <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center"
+                   asp-controller="Home" asp-action="Index"
+                   asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
+                    @item.Title
+                    @if (item.PostCount > 0)
+                    {
+    <span class="badge badge-success badge-pill">@item.PostCount</span>}
+                </a>
+            </li>}
                     </ul>
                 </div>
                 <p class="text-muted mt-3 ml-8"></p>
@@ -203,48 +193,52 @@
             $("#searchStartDate").on("change", function (e) {
                 $("#searchEndDate").attr("min", $(this).val());
             });
+            
+            if (typeof errors != "undefined") {
 
-            $.each(errors, function (id, text) {
+                $.each(errors, function (id, text) {
 
-                if (id == "errorMessage") {
-                    swal({
-                        title: text,
-                        text: "",
-                        type: "error",
-                        //confirmButtonClass: "btn-danger",
-                        confirmButtonText: "Tamam",
-                        closeOnConfirm: false
-                    });
-                } else if (id == "warningMessage") {
-                    swal({
-                        title: text,
-                        text: "",
-                        type: "warning",
-                        confirmButtonText: "Tamam",
-                        closeOnConfirm: false
-                    });
-                } else if (id == "successMessage") {
-                    swal({
-                        title: text,
-                        text: "",
-                        type: "success",
-                        confirmButtonText: "Tamam",
-                        closeOnConfirm: false
-                    });
-                } else if (id == "infoMessage") {
-                    swal({
-                        title: text,
-                        text: "",
-                        type: "info",
-                        confirmButtonText: "Tamam",
-                        closeOnConfirm: false
-                    });
-                } else {
-                    var itemId = "#" + id;
-                    $(itemId).next().html(text).addClass("error field-validation-invalid");
-                }
-                //alert(id + "->" + text);
-            });
+                    if (id == "errorMessage") {
+                        swal({
+                            title: text,
+                            text: "",
+                            type: "error",
+                            //confirmButtonClass: "btn-danger",
+                            confirmButtonText: "Tamam",
+                            closeOnConfirm: false
+                        });
+                    } else if (id == "warningMessage") {
+                        swal({
+                            title: text,
+                            text: "",
+                            type: "warning",
+                            confirmButtonText: "Tamam",
+                            closeOnConfirm: false
+                        });
+                    } else if (id == "successMessage") {
+                        swal({
+                            title: text,
+                            text: "",
+                            type: "success",
+                            confirmButtonText: "Tamam",
+                            closeOnConfirm: false
+                        });
+                    } else if (id == "infoMessage") {
+                        swal({
+                            title: text,
+                            text: "",
+                            type: "info",
+                            confirmButtonText: "Tamam",
+                            closeOnConfirm: false
+                        });
+                    } else {
+                        var itemId = "#" + id;
+                        $(itemId).next().html(text).addClass("error field-validation-invalid");
+                    }
+                    //alert(id + "->" + text);
+                });
+
+            };
         });
     </script>
 </body>
