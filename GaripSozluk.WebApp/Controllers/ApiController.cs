@@ -75,7 +75,14 @@ namespace GaripSozluk.WebApp.Controllers
             {
                 var insertedTitleCount = _headerService.BulkInsert(HttpContext.User, titles);
 
-                statusText = string.Format(statusText, titles.Count, insertedTitleCount);
+                if (insertedTitleCount > 0)
+                {
+                    statusText = string.Format(statusText, titles.Count, insertedTitleCount);
+                }
+                else
+                {
+                    statusText = "Seçilen başlıklar daha önce girilmiş.";
+                }
 
                 return Content(JsonConvert.SerializeObject(new
                 {
