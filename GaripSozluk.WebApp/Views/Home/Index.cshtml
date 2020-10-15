@@ -11,7 +11,7 @@
             <a class="text-success" asp-controller="Home" asp-action="Index" asp-route-headerId="@header.HeaderId" asp-route-categoryId="@header.CategoryId">@header.HeaderTitle</a>
         </div>
         <div class="d-block d-inline d-flex justify-content-between">
-            <p class="small">@header.ClickCount Görüntülenme</p><p class="small">@header.Username</p>
+            <p class="small">@header.ClickCount Görüntülenme</p><p class="small">@header.HeaderDate.ToString("dd/MM/yyyy HH:mm:ss")</p><p class="small">@header.Username</p>
         </div>
     </div>
 

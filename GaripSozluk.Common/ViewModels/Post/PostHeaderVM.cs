@@ -14,6 +14,8 @@ namespace GaripSozluk.Common.ViewModels.Post
 
         public string HeaderTitle { get; set; }
 
+        public DateTime HeaderDate { get; set; }
+
         public int ClickCount { get; set; }
 
         public List<PostVM> Posts { get; set; }

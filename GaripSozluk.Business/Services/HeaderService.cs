@@ -17,6 +17,7 @@ namespace GaripSozluk.Business.Services
         //ToDo: OK! Private sabit tanımlamalarına küçük harfle başlamayalım. 'PageMaxItemCount' olmalıdır.
         const int PageMaxItemCount = 8;
 
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IHeaderRepository _headerRepository;
         private readonly IPostRepository _postRepository;
         private readonly IPostRatingRepository _postRatingRepository;
@@ -24,12 +25,15 @@ namespace GaripSozluk.Business.Services
         private readonly IPostService _postService;
         private readonly IUserService _userService;
 
-        public HeaderService(IHeaderRepository headerRepository,
+        public HeaderService(
+            ICategoryRepository categoryRepository,
+            IHeaderRepository headerRepository,
             IPostRepository postRepository,
-            IPostRatingRepository postRatingRepository, 
+            IPostRatingRepository postRatingRepository,
             IPostService postService,
             IUserService userService)
         {
+            _categoryRepository = categoryRepository;
             _headerRepository = headerRepository;
             _postRepository = postRepository;
             _postRatingRepository = postRatingRepository;
@@ -38,7 +42,7 @@ namespace GaripSozluk.Business.Services
             _userService = userService;
         }
 
-        
+
         public Header GetHeaderById(ClaimsPrincipal contextUser, int id)
         {
             var blockedUserIds = _userService.GetBlockedUserIds(contextUser);
@@ -100,7 +104,8 @@ namespace GaripSozluk.Business.Services
                 HeaderTitle = headerEntity.Title,
                 UserId = headerEntity.UserId,
                 Username = headerEntity.User.UserName,
-                ClickCount = headerEntity.ClickCount
+                ClickCount = headerEntity.ClickCount,
+                HeaderDate = headerEntity.UpdateDate ?? headerEntity.CreateDate
             };
 
             //ToDo: OK! Sadece count çekeceksen where sorgusu yazmana gerek yok single olarak count içerisinde filtre yapabilirsin. Örnek kodu aşağıda paylaşıyorum.
@@ -191,7 +196,8 @@ namespace GaripSozluk.Business.Services
                         HeaderTitle = x.Title,
                         UserId = x.UserId,
                         Username = x.User.UserName,
-                        ClickCount = x.ClickCount
+                        ClickCount = x.ClickCount,
+                        HeaderDate = x.UpdateDate ?? x.CreateDate
                     };
 
                     var post = x.Posts.Where(x => !blockedUserIds.Contains(x.UserId))
@@ -333,13 +339,48 @@ namespace GaripSozluk.Business.Services
                     ClickCount = x.ClickCount,
                     HeaderTitle = x.Title,
                     UserId = x.UserId,
-                    Username = x.User.UserName
+                    Username = x.User.UserName,
+                    HeaderDate = x.UpdateDate ?? x.CreateDate
                 };
 
                 model.Headers.Add(header);
             });
 
             return model;
+        }
+
+        public int BulkInsert(ClaimsPrincipal contextUser, List<string> headerList)
+        {
+            var user = _userService.GetUser(contextUser);
+
+            int insertedHeaderCount = 0;
+
+            if (headerList.Count > 0)
+            {
+                var category = _categoryRepository.GetOrCreate("Kitap");
+
+                foreach (var title in headerList)
+                {
+                    var header = _headerRepository.Get(x => x.Title == title);
+
+                    if (header == null)
+                    {
+                        header = new Header()
+                        {
+                            Title = title,
+                            UserId = user.Id,
+                            CategoryId = category.Id,
+                            CreateDate = DateTime.Now
+                        };
+
+                        _headerRepository.Add(header);
+                        insertedHeaderCount++;
+                    }
+                }
+                _headerRepository.Save();
+            }
+
+            return insertedHeaderCount;
         }
     }
 }

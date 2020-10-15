@@ -27,5 +27,7 @@ namespace GaripSozluk.Business.Interfaces
         int GetRandomHeaderIndex(ClaimsPrincipal contextUser);
 
         PostHeaderListVM Search(ClaimsPrincipal contextUser, HeaderSearchVM searchModel);
+
+        int BulkInsert(ClaimsPrincipal contextUser, List<string> headerList);
     }
 }

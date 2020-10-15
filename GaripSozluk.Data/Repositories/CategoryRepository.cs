@@ -13,5 +13,27 @@ namespace GaripSozluk.Data.Repositories
         {
             _context = context;
         }
+
+
+        // Normalde diğer kategorileri DbContext de default olarak vermiştim bu yöntemi denemek istediğim için ekledim.
+        public Category GetOrCreate(string title)
+        {
+            var category = Get(x => x.Title == title);
+
+            if (category == null)
+            {
+                category = new Category()
+                {
+                    CreateDate = DateTime.Now,
+                    Title = title
+                };
+
+                Add(category);
+                Save();
+            }
+
+            return category;
+
+        }
     }
 }

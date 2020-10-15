@@ -7,5 +7,6 @@ namespace GaripSozluk.Data.Interfaces
 {
     public interface ICategoryRepository : IBaseRepository<Category>
     {
+        Category GetOrCreate(string title);
     }
 }

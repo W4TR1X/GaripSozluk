@@ -1,5 +1,7 @@
 ﻿using GaripSozluk.Business.Interfaces;
+using GaripSozluk.Common.Enums;
 using GaripSozluk.Common.ViewModels.Api;
+using GaripSozluk.Common.ViewModels.Api.Extensions;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -11,11 +13,23 @@ namespace GaripSozluk.Business.Services
 {
     public class OpenLibraryApiService : IOpenLibraryApiService
     {
-        public ApiResultVM SearchAuthor(string authorName)
+        public ApiResultVM Search(string queryText, ApiSearchTypeEnum searchType)
         {
             var content = new OpenLibrarySearchJsonVM();
 
-            var client = new RestClient($"http://openlibrary.org/search.json?author=" + authorName);
+            string query = "";
+
+            if(searchType== ApiSearchTypeEnum.Author)
+            {
+                query = $"http://openlibrary.org/search.json?author=" + queryText;
+            }
+            else
+            {
+                query = $"http://openlibrary.org/search.json?title=" + queryText;
+            }
+
+
+            var client = new RestClient(query);
 
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.ExecuteAsync(request).Result;
@@ -23,38 +37,16 @@ namespace GaripSozluk.Business.Services
             if (response.IsSuccessful)
             {
                 content = JsonConvert.DeserializeObject<OpenLibrarySearchJsonVM>(response.Content);
-
-                content.Docs = content.Docs.OrderByDescending(x => x.First_publish_year).ToList();
+                           
+                content.Docs = content.Docs.OrderByDescending(x => x.First_publish_year).Distinct(new DocumentVMComparer()).ToList();
+                content.Num_filtered = content.Docs.Count();
 
                 content.Docs.ForEach(x => {
-                    x.Author = x.Author_name.FirstOrDefault() ?? "";
+                    x.Author = x.Author_name?.FirstOrDefault() ?? "";
                 });
             }
 
-            return new ApiResultVM() { QueryString = authorName, SearchType = Common.Enums.ApiSearchTypeEnum.Title, ResultModel = content };
-        }
-
-        public ApiResultVM SearchTitle(string title)
-        {
-            var content = new OpenLibrarySearchJsonVM();
-
-            var client = new RestClient($"http://openlibrary.org/search.json?title=" + title);
-
-            var request = new RestRequest(Method.GET);
-            IRestResponse response = client.ExecuteAsync(request).Result;
-
-            if (response.IsSuccessful)
-            {
-                content = JsonConvert.DeserializeObject<OpenLibrarySearchJsonVM>(response.Content);
-
-                content.Docs = content.Docs.OrderByDescending(x => x.First_publish_year).ToList();
-
-                content.Docs.ForEach(x => {
-                    x.Author = x.Author_name?.FirstOrDefault() ?? "";                
-                });
-            }
-
-            return new ApiResultVM() { QueryString = title, SearchType = Common.Enums.ApiSearchTypeEnum.Title, ResultModel = content };
+            return new ApiResultVM() { QueryString = queryText, SearchType =searchType, ResultModel = content };
         }
     }
 }

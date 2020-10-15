@@ -5,10 +5,11 @@ using System.Text;
 
 namespace GaripSozluk.Common.ViewModels.Api
 {
-    public class DocumentVM : IEqualityComparer<DocumentVM>
+    public class DocumentVM
     {
         public string Author { get; set; }
         public List<string> Author_name { get; set; }
+
         public List<string> First_sentence { get; set; }
         public string Key { get; set; }
         public List<string> Language { get; set; }
@@ -24,33 +25,29 @@ namespace GaripSozluk.Common.ViewModels.Api
         public bool IsSelected { get; set; }
 
 
-
-
-
-
-        public bool Equals([AllowNull] DocumentVM x, [AllowNull] DocumentVM y)
+        public string GetAuthorText()
         {
-            if (x == null && y == null)
+            if (Author_name != null && Author_name.Count > 0)
             {
-                return true;
+                return $"({string.Join(",", Author_name)})";
             }
-            else if (x == null || y == null)
+            return "";
+        }
+
+        public bool Equals([AllowNull] DocumentVM other)
+        {
+            if (other == null)
             {
                 return false;
             }
-            else if (x.GetHashCode() == y.GetHashCode())
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+
+            return this.Title.Equals(other.Title);
         }
 
-        public int GetHashCode([DisallowNull] DocumentVM obj)
+        public override int GetHashCode()
         {
-            return obj.Title.GetHashCode();
+            return this.Title.GetHashCode();
         }
+
     }
 }

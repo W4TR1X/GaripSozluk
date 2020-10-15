@@ -1,0 +1,144 @@
+﻿@model GaripSozluk.Common.ViewModels.Api.ApiResultVM
+
+@{
+    ViewData["Title"] = "Api Arama Sonuçları";   
+
+    var isLoggedin = User.Identity.IsAuthenticated;
+}
+
+<div class="row">
+    <div class="col shadow border border-success rounded-lg mt-5 pt-3">
+        <div class="row">
+            <div class="col">
+                <div class="form-row">
+                    <p class="font-weight-bold text-success">Aranan:</p>&nbsp;@Model.QueryString
+                </div>
+                <div class="form-row">
+                    <p class="font-weight-bold text-success">Arama türü:</p>&nbsp;@(Model.SearchType==ApiSearchTypeEnum.Author?"Yazar":"Başlık")
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-row">
+                    <p class="font-weight-bold text-success">Bulunan kayıt sayısı (Api cevabı):</p>&nbsp;@Model.ResultModel.Num_found
+                </div>
+                <div class="form-row">
+                    <p class="font-weight-bold text-success">Listelenen kayıt sayısı:</p>&nbsp;@Model.ResultModel.Num_filtered
+                </div>
+            </div>
+        </div>
+        <br />
+        <table class="table table-hover border rounded-lg">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Başlık</th>
+                    <th></th>
+                    <th>Tarih</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ResultModel.Docs)
+                {
+                    <tr class="apiRecord">
+                        <td>
+                            @if (isLoggedin)
+                            {
+                                <input type="checkbox" id="isSelected" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;" />
+                            }
+                        </td>
+                        <td>
+                            <label name="Title">@item.Title</label>
+                        </td>
+                        <td>
+                            <label name="Title" class="small text-success">@item.GetAuthorText()</label>
+                        </td>
+                        <td>
+                            <label name="Year">@item.First_publish_year</label>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="form-group">
+            @if (isLoggedin)
+            {
+                <button type="button" id="sendSelectedOnes" class="btn btn-success btn-block">Seçilenleri Kaydet</button>
+            }
+        </div>
+    </div>
+</div>
+<br />
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sendSelectedOnes").on("click", function (e) {
+                e.preventDefault();
+
+                var records = $(".apiRecord");
+
+                var formData = new FormData;
+
+                var recordCount = 0;
+
+                records.each(function (i, item) {
+
+                    var isChecked = item.childNodes[1].childNodes[1].checked;
+                    var title = item.childNodes[3].innerText;
+
+                    if (isChecked && title.length > 0) {
+                        formData.append("titles", title);
+                        recordCount++;
+                    };
+                });
+
+                if (recordCount > 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Api/InsertTitles",
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.status == "success") {
+                                swal({
+                                    title: "Bilgi",
+                                    text: response.message,
+                                    type: "success",
+                                    confirmButtonClass: "btn-success",
+                                    confirmButtonText: "Tamam",
+                                    closeOnConfirm: false
+                                }, function () {
+                                    window.location = response.returnUrl;
+                                });
+                            } else {
+                                swal({
+                                    title: "Hata",
+                                    text: response.message,
+                                    type: "error",
+                                    confirmButtonClass: "btn-danger",
+                                    confirmButtonText: "Yeniden yükle",
+                                    closeOnConfirm: false
+                                }, function () {
+                                    window.location = window.location.href;
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal({
+                                title: "Hata",
+                                text: "Bir hata oluştu!",
+                                type: "error",
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Yeniden yükle",
+                                closeOnConfirm: false
+                            }, function () {
+                                window.location = window.location.href;
+                            });
+                        }
+                    });
+                };
+            });
+        });
+    </script>
+}
