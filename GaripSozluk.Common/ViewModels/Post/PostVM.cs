@@ -7,8 +7,6 @@ namespace GaripSozluk.Common.ViewModels.Post
 {
     public class PostVM
     {
-       
-
         public int PostId { get; set; }
         public string Content { get; set; }
         public int UserId { get; set; }
@@ -19,14 +17,5 @@ namespace GaripSozluk.Common.ViewModels.Post
         public int DislikeCount { get; set; }
 
         public PostLikeState LikeState { get; set; }
-
-        public bool IsApiResult { get; set; }
-
-
-        public PostVM()
-        {
-            IsApiResult = false;
-        }
-
     }
 }

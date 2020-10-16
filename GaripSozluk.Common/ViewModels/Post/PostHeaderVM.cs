@@ -19,13 +19,10 @@ namespace GaripSozluk.Common.ViewModels.Post
         public int ClickCount { get; set; }
 
         public List<PostVM> Posts { get; set; }
-        public bool IsApiResult { get; set; }
-
 
         public PostHeaderVM()
         {
             Posts = new List<PostVM>();
-            IsApiResult = false;
         }
     }
 }

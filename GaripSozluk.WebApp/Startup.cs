@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GaripSozluk.Business.Interfaces;
+using GaripSozluk.Business.Middleware;
 using GaripSozluk.Business.Services;
 using GaripSozluk.Data;
 using GaripSozluk.Data.Domain;
@@ -10,7 +7,6 @@ using GaripSozluk.Data.Interfaces;
 using GaripSozluk.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,8 +27,11 @@ namespace GaripSozluk.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("AppDatabase");
-            services.AddDbContext<GaripSozlukDbContext>(options => options.UseSqlServer(connectionString));
+            var appConnectionString = Configuration.GetConnectionString("AppDatabase");
+            var logConnectionString = Configuration.GetConnectionString("LogDatabase");
+
+            services.AddDbContext<GaripSozlukDbContext>(options => options.UseSqlServer(appConnectionString))
+                    .AddDbContext<GaripSozlukLogDbContext>(options => options.UseNpgsql(logConnectionString));
 
             services.AddIdentity<AppUser, AppRole>()
                .AddRoles<AppRole>()
@@ -44,15 +43,21 @@ namespace GaripSozluk.WebApp
             services.AddScoped<IHeaderRepository, HeaderRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostRatingRepository, PostRatingRepository>();
-            services.AddScoped<IBlockedUserRepository,BlockedUserRepository>();
+            services.AddScoped<IBlockedUserRepository, BlockedUserRepository>();
+            //Log Repository
+            services.AddScoped<ILogRepository, LogRepository>();
+
 
             //Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IHeaderService, HeaderService>();
             services.AddScoped<IPostService, PostService>();
-
+            //OpenLibrary Api Service
             services.AddScoped<IOpenLibraryApiService, OpenLibraryApiService>();
+            //Log Service
+            services.AddScoped<ILogService,LogService>();
+
 
             services.AddControllersWithViews();
         }
@@ -70,6 +75,8 @@ namespace GaripSozluk.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseMiddleware<RequestLoggerMiddleware>();
 
             //app.UseHttpsRedirection();
 

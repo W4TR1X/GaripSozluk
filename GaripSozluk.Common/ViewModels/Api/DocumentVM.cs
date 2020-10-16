@@ -17,7 +17,7 @@ namespace GaripSozluk.Common.ViewModels.Api
         public string Type { get; set; }
 
         public List<String> Publish_year { get; set; }
-        public int First_publish_year { get; set; }
+        public String First_publish_year { get; set; }
 
         public List<String> Seed { get; set; }
 
@@ -29,7 +29,7 @@ namespace GaripSozluk.Common.ViewModels.Api
         {
             if (Author_name != null && Author_name.Count > 0)
             {
-                return $"{string.Join(",", Author_name)}";
+                return $"({string.Join(",", Author_name)})";
             }
             return "";
         }
