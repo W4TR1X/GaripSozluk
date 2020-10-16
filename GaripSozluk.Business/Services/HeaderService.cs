@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using GaripSozluk.Common.ViewModels.Api;
 
 namespace GaripSozluk.Business.Services
 {
@@ -21,6 +22,7 @@ namespace GaripSozluk.Business.Services
         private readonly IHeaderRepository _headerRepository;
         private readonly IPostRepository _postRepository;
         private readonly IPostRatingRepository _postRatingRepository;
+        private readonly IOpenLibraryApiService _openLibraryApiService;
 
         private readonly IPostService _postService;
         private readonly IUserService _userService;
@@ -30,6 +32,7 @@ namespace GaripSozluk.Business.Services
             IHeaderRepository headerRepository,
             IPostRepository postRepository,
             IPostRatingRepository postRatingRepository,
+            IOpenLibraryApiService openLibraryApiService,
             IPostService postService,
             IUserService userService)
         {
@@ -37,6 +40,8 @@ namespace GaripSozluk.Business.Services
             _headerRepository = headerRepository;
             _postRepository = postRepository;
             _postRatingRepository = postRatingRepository;
+
+            _openLibraryApiService = openLibraryApiService;
 
             _postService = postService;
             _userService = userService;
@@ -89,24 +94,44 @@ namespace GaripSozluk.Business.Services
 
             var headerEntity = _headerRepository.Where(x => x.Id == headerId && !blockedUserIds.Contains(x.UserId), new List<string> { "User", "Posts" }).FirstOrDefault();
 
+            var header = new PostHeaderVM();
+
+            ApiResultVM apiModel = null;
+
             if (headerEntity == null)
             {
                 model = GetPopularHeaders(user);
                 return model;
             }
+            else
+            {
+                var title = headerEntity.Title;
+                var isBook = title.EndsWith("(Kitap)");
+                var isAuthor = title.EndsWith("(Yazar)");
+
+                if (isBook || isAuthor)
+                {
+                    title = title.Remove(title.Length - 7);
+                    if (isBook)
+                    {
+                        apiModel = _openLibraryApiService.Search(title, Common.Enums.ApiSearchTypeEnum.Title);
+                    }
+                    else if (isAuthor)
+                    {
+                        apiModel = _openLibraryApiService.Search(title, Common.Enums.ApiSearchTypeEnum.Author);
+                    }
+                }
+            }
 
             headerEntity.ClickCount++;
 
-            var header = new PostHeaderVM()
-            {
-                CategoryId = headerEntity.CategoryId,
-                HeaderId = headerEntity.Id,
-                HeaderTitle = headerEntity.Title,
-                UserId = headerEntity.UserId,
-                Username = headerEntity.User.UserName,
-                ClickCount = headerEntity.ClickCount,
-                HeaderDate = headerEntity.UpdateDate ?? headerEntity.CreateDate
-            };
+            header.CategoryId = headerEntity.CategoryId;
+            header.HeaderId = headerEntity.Id;
+            header.HeaderTitle = headerEntity.Title;
+            header.UserId = headerEntity.UserId;
+            header.Username = headerEntity.User.UserName;
+            header.ClickCount = headerEntity.ClickCount;
+            header.HeaderDate = headerEntity.UpdateDate ?? headerEntity.CreateDate;
 
             //ToDo: OK! Sadece count çekeceksen where sorgusu yazmana gerek yok single olarak count içerisinde filtre yapabilirsin. Örnek kodu aşağıda paylaşıyorum.
             var postCount = headerEntity.Posts.Count(x => !blockedUserIds.Contains(x.UserId));
@@ -158,12 +183,35 @@ namespace GaripSozluk.Business.Services
                     }
 
                     header.Posts.Add(postVM);
-
                 });
             }
 
-            model.Headers.Add(header);
+            if (apiModel != null)
+            {
+                header.IsApiResult = true;
 
+                foreach (var doc in apiModel.ResultModel.Docs.Take(10))
+                {
+                    DateTime dateValue;
+                    if (!DateTime.TryParse(doc.First_publish_year + "-01-01", out dateValue))
+                    {
+                        dateValue = DateTime.Now;
+                    }
+
+                    var post = new PostVM()
+                    {
+                        Content = doc.Title,
+                        Username = doc.GetAuthorText(),
+                        DislikeCount = 0,
+                        LikeCount = 0,
+                        IsApiResult = true,
+                        PostDate = dateValue
+                    };
+                    header.Posts.Add(post);
+                }
+            }
+
+            model.Headers.Add(header);
             _headerRepository.Save();
 
             return model;
