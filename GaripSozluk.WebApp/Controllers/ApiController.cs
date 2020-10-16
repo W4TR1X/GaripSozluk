@@ -77,11 +77,18 @@ namespace GaripSozluk.WebApp.Controllers
 
                 if (insertedTitleCount > 0)
                 {
-                    statusText = string.Format(statusText, titles.Count, insertedTitleCount);
+                    if (titles.Count == insertedTitleCount)
+                    {
+                        statusText = "Tüm başlıklar başarıyla eklendi.";
+                    }
+                    else
+                    {
+                        statusText = string.Format(statusText, titles.Count, insertedTitleCount);
+                    }
                 }
                 else
                 {
-                    statusText = "Seçilen başlıklar daha önce girilmiş.";
+                    statusText = "Seçilen başlıklar daha önce eklenmiş.";
                 }
 
                 return Content(JsonConvert.SerializeObject(new

@@ -33,6 +33,7 @@
                     <th></th>
                     <th>Başlık</th>
                     <th></th>
+                    <th></th>
                     <th>Tarih</th>
                 </tr>
             </thead>
@@ -43,17 +44,23 @@
                         <td>
                             @if (isLoggedin)
                             {
-                                <input type="checkbox" class="checkmark" name="@nameof(item.IsSelected)" style="width: 25px;height: 25px;" />
+                                <input type="checkbox" class="checkmark" style="width: 25px;height: 25px;" />
                             }
                         </td>
                         <td>
                             <label name="Title">@item.Title</label>
                         </td>
                         <td>
-                            <label name="Title" class="small text-success">@item.GetAuthorText()</label>
+                            @if (isLoggedin && item.GetAuthorText().Length > 0)
+                            {
+                                <input type="checkbox" class="checkmark" style="width: 25px;height: 25px;" />
+                            }
                         </td>
                         <td>
-                            <label name="Year">@item.First_publish_year</label>
+                            <label class="small text-success">@item.GetAuthorText()</label>
+                        </td>
+                        <td>
+                            <label>@item.First_publish_year</label>
                         </td>
                     </tr>
                 }
@@ -80,19 +87,29 @@
                 e.preventDefault();
 
                 var records = $(".apiRecord");
-
-                var formData = new FormData;
-
                 var recordCount = 0;
+                var formData = new FormData;
 
                 records.each(function (i, item) {
 
-                    var isChecked = item.childNodes[1].childNodes[1].checked;
-                    var title = item.childNodes[3].innerText;
+                    var isChecked = item.children[0].firstElementChild.checked;
+                    var title = item.children[1].innerText;
 
                     if (isChecked && title.length > 0) {
-                        formData.append("titles", title);
+                        formData.append("titles", title + "(Kitap)");
                         recordCount++;
+                    };
+
+                    let authorCheckbox = item.children[2].firstElementChild;
+
+                    if (authorCheckbox != null) {
+                        isChecked = authorCheckbox.checked;
+                        title = item.children[3].innerText;
+
+                        if (isChecked && title.length > 0) {
+                            formData.append("titles", title + "(Yazar)");
+                            recordCount++;
+                        };
                     };
                 });
 
