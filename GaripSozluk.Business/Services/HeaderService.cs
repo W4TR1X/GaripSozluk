@@ -361,7 +361,7 @@ namespace GaripSozluk.Business.Services
 
                 foreach (var title in headerList)
                 {
-                    var header = _headerRepository.Get(x => x.Title == title);
+                    var header = _headerRepository.Get(x => x.Title == title && x.CategoryId == category.Id);
 
                     if (header == null)
                     {
