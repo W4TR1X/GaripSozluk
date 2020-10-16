@@ -2,6 +2,7 @@
 using GaripSozluk.Data.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace GaripSozluk.Business.Middleware
@@ -54,6 +55,7 @@ namespace GaripSozluk.Business.Middleware
                     UserAgent = context.Request.Headers["User-Agent"],
                     RoutePath = routePath,
                     IPAddress = context.Connection.RemoteIpAddress.ToString(),
+                    CreateDate = DateTime.Now
                 };
 
                 logService.InsertLog(log);

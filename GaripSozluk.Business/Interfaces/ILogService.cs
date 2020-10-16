@@ -1,5 +1,6 @@
 ﻿using GaripSozluk.Common.ViewModels;
 using GaripSozluk.Common.ViewModels.Account;
+using GaripSozluk.Common.ViewModels.Log;
 using GaripSozluk.Common.ViewModels.User;
 using GaripSozluk.Data.Domain;
 using System;
@@ -12,5 +13,7 @@ namespace GaripSozluk.Business.Interfaces
     public interface ILogService
     {
         bool InsertLog(Log model);
+
+        List<LogVM> GetAll();
     }
 }

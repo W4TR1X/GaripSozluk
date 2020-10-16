@@ -56,7 +56,7 @@ namespace GaripSozluk.WebApp
             //OpenLibrary Api Service
             services.AddScoped<IOpenLibraryApiService, OpenLibraryApiService>();
             //Log Service
-            services.AddScoped<ILogService,LogService>();
+            services.AddScoped<ILogService, LogService>();
 
 
             services.AddControllersWithViews();
@@ -76,13 +76,13 @@ namespace GaripSozluk.WebApp
                 app.UseHsts();
             }
 
-            app.UseMiddleware<RequestLoggerMiddleware>();
-
             //app.UseHttpsRedirection();
 
             app.UseStatusCodePages();
 
             app.UseStaticFiles();
+
+            app.UseMiddleware<RequestLoggerMiddleware>();
 
             app.UseRouting();
 

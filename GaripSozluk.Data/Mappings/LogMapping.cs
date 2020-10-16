@@ -7,11 +7,11 @@ using System.Text;
 
 namespace GaripSozluk.Data.Mappings
 {
-    public class LogMapping : IEntityTypeConfiguration<Log>
+    public class LogMapping : BaseMapping<Log>
     {
-        public void Configure(EntityTypeBuilder<Log> builder)
+        public override void Configure(EntityTypeBuilder<Log> builder)
         {
-            builder.HasKey(x => x.Id);
+            base.Configure(builder);
 
             builder.Property(x => x.TraceIdentifier);
             builder.Property(x => x.ResponseStatusCode);

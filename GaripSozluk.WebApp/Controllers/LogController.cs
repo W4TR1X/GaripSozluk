@@ -20,9 +20,10 @@ namespace GaripSozluk.WebApp.Controllers
             _logService = logService;
         }
 
-        public IActionResult Index()
+        public IActionResult LogList()
         {
-            return View();
+            var logs = _logService.GetAll();
+            return View(logs);
         }
     }
 }

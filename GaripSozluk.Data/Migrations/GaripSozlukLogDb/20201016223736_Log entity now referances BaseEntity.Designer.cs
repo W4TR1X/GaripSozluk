@@ -3,15 +3,17 @@ using System;
 using GaripSozluk.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GaripSozluk.Data.Migrations.GaripSozlukLogDb
 {
     [DbContext(typeof(GaripSozlukLogDbContext))]
-    partial class GaripSozlukLogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201016223736_Log entity now referances BaseEntity")]
+    partial class LogentitynowreferancesBaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

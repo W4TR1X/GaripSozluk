@@ -4,9 +4,8 @@ using System.Text;
 
 namespace GaripSozluk.Data.Domain
 {
-    public class Log
+    public class Log : BaseEntity
     {
-        public int Id { get; set; }
         public string TraceIdentifier { get; set; }
         public string ResponseStatusCode { get; set; }
         public string RequestMethod { get; set; }

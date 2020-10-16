@@ -20,6 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-sweetalert/dist/sweetalert.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -77,7 +78,7 @@
                     <a class="nav-link" asp-controller="Api" asp-action="ApiSearch">Api Arama</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="Log" asp-action="Index">Log Listesi</a>
+                    <a class="nav-link" asp-controller="Log" asp-action="LogList">Log Listesi</a>
                 </li>
             </ul>
             <form class="mr-auto d-sm-none d-md-block" asp-controller="Home" asp-action="Index" method="post">
@@ -105,15 +106,13 @@
                             <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random">Rastgele</a>
                             @if (Context.User.Identity.IsAuthenticated)
                             {
-                                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
+                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
                                 <a class="nav-link text-white mr-2" asp-controller="Account" asp-action="GetBlockedUsersList">@(Context.User.Identity.Name)</a>
-                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a> 
-                            }
-                            else
-                            {
+                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a> }
+                                            else
+                                            {
                                 <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>
-                            }
+                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>}
                         </div>
                     </div>
                 </li>
@@ -133,14 +132,14 @@
                     }
 
                     <li class="nav-item">
-                        @if (headerId > 0)
-                        {
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@Html.Raw(categoryText)</a> 
-                        }
-                        else
-                        {
-                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@Html.Raw(categoryText)</a>
-                        }
+                    @if (headerId > 0)
+                    {
+                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@Html.Raw(categoryText)</a> 
+                    }
+                    else
+                    {
+                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@Html.Raw(categoryText)</a>
+                    }
                     </li>
                 }
             </ul>
@@ -148,36 +147,46 @@
     </nav>
     <div class="container">
         <div class="d-flex flex-column-reverse flex-md-row">
-            <div class="col-md-4 col-lg-3 border-right overflow-hidden">
-                <p class="text-muted mt-3 ml-8">
-                    <a class="btn btn-light bg-white" asp-controller="Home" asp-action="Index" asp-route-categoryId="@categoryId">
-                        @CategoryService.GetCategoryNameById(categoryId)
-                    </a>
-                </p>
-                <div class="pl-2">
-                    <ul class="list-group">
-                        @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
-                        {
-                            <li class="list-group-item border-0 m-1 p-1">
-                                <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center" asp-controller="Home" asp-action="Index" asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
+            @if (ViewData["NoSidebar"] == null)
+            {
+                <div class="col-md-4 col-lg-3 border-right overflow-hidden">
+                    <p class="text-muted mt-3 ml-8">
+                        <a class="btn btn-light bg-white" asp-controller="Home" asp-action="Index" asp-route-categoryId="@categoryId">
+                            @CategoryService.GetCategoryNameById(categoryId)
+                        </a>
+                    </p>
+                    <div class="pl-2">
+                        <ul class="list-group">
+                            @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
+                            {
+                                <li class="list-group-item border-0 m-1 p-1">
+                                    <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center" asp-controller="Home" asp-action="Index" asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
                                     @item.Title
                                     @if (item.PostCount > 0)
                                     {
-                                        <span class="badge badge-success badge-pill">@item.PostCount</span>
-                                    }
-                                </a>        
-                            </li>
-                        }
-                    </ul>
+                                        <span class="badge badge-success badge-pill">@item.PostCount</span>}
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <p class="text-muted mt-3 ml-8"></p>
                 </div>
-                <p class="text-muted mt-3 ml-8"></p>
-            </div>
-            <div class="col-md-8 col-lg-9 h-100 d-inline-block">
-                <div class="container">
-                    @RenderBody()
+                <div class="col-md-8 col-lg-9 h-100 d-inline-block">
+                    <div class="container">
+                        @RenderBody()
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-12 h-100 d-inline-block">
+                    <div class="container">
+                        @RenderBody()
+                    </div>
+                </div>
+            }
 
-                </div>
-            </div>
         </div>
         <footer class="d-flex flex-row border-top footer text-muted">
             <div class="col-md-3 text-center">
@@ -197,6 +206,8 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/lib/bootstrap-sweetalert/dist/sweetalert.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
