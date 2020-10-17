@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GaripSozluk.Business.Interfaces;
+using GaripSozluk.Common.ViewModels.Log;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -22,8 +23,24 @@ namespace GaripSozluk.WebApp.Controllers
 
         public IActionResult LogList()
         {
-            var logs = _logService.GetAll();
-            return View(logs);
+            var model = new LogResultVM();
+            model.Logs = _logService.GetAll();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LogList(LogResultVM model)
+        {
+            model.Logs = _logService.GetAll();
+
+            if (model.FirstDate.HasValue || model.LastDate.HasValue)
+            {
+                //Do filter
+                model.FilteredLogs = _logService.GetAllByDateFilter(model.FirstDate, model.LastDate);
+            }
+
+            return View(model);
         }
     }
 }

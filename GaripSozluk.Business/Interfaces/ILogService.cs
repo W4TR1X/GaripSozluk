@@ -15,5 +15,7 @@ namespace GaripSozluk.Business.Interfaces
         bool InsertLog(Log model);
 
         List<LogVM> GetAll();
+
+        List<FilteredLogVM> GetAllByDateFilter(DateTime? startDate, DateTime? endDate);
     }
 }

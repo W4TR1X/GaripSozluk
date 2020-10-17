@@ -49,7 +49,7 @@ namespace GaripSozluk.Business.Middleware
                 var log = new Log()
                 {
                     TraceIdentifier = context.TraceIdentifier,
-                    ResponseStatusCode = context.Response.StatusCode.ToString(),
+                    ResponseStatusCode = context.Response.StatusCode,
                     RequestMethod = context.Request.Method,
                     RequestPath = context.Request.Path,
                     UserAgent = context.Request.Headers["User-Agent"],

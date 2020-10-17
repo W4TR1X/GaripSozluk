@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GaripSozluk.Data.Migrations.GaripSozlukLogDb
 {
     [DbContext(typeof(GaripSozlukLogDbContext))]
-    [Migration("20201016223736_Log entity now referances BaseEntity")]
-    partial class LogentitynowreferancesBaseEntity
+    [Migration("20201017192811_init Postgre GaripSozlukLogDb")]
+    partial class initPostgreGaripSozlukLogDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,25 +36,31 @@ namespace GaripSozluk.Data.Migrations.GaripSozlukLogDb
                         .HasMaxLength(15);
 
                     b.Property<string>("RequestMethod")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(6)")
+                        .HasMaxLength(6);
 
                     b.Property<string>("RequestPath")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("ResponseStatusCode")
-                        .HasColumnType("text");
+                    b.Property<int>("ResponseStatusCode")
+                        .HasColumnType("integer")
+                        .HasMaxLength(3);
 
                     b.Property<string>("RoutePath")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
 
                     b.Property<string>("TraceIdentifier")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(36)")
+                        .HasMaxLength(36);
 
                     b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("UserAgent")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 

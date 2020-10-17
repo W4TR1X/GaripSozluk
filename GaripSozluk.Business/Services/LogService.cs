@@ -23,7 +23,10 @@ namespace GaripSozluk.Business.Services
         {
             var model = new List<LogVM>();
 
-            _logRepository.GetAll().ToList().ForEach(x =>
+            _logRepository
+                .GetAll()
+                .ToList()
+                .ForEach(x =>
             {
                 var logRow = new LogVM()
                 {
@@ -40,6 +43,50 @@ namespace GaripSozluk.Business.Services
 
                 model.Add(logRow);
             });
+
+            return model;
+        }
+
+        public List<FilteredLogVM> GetAllByDateFilter(DateTime? startDate, DateTime? endDate)
+        {
+            var model = new List<FilteredLogVM>();
+
+            if (!startDate.HasValue && !endDate.HasValue)
+            {
+                return model;
+            }
+
+            var query = _logRepository.GetAll();
+
+            if (startDate.HasValue && !endDate.HasValue)
+            {
+                query = query
+                    .Where(x => x.CreateDate.Date >= startDate.Value.Date);
+            }
+            else if (endDate.HasValue && !startDate.HasValue)
+            {
+                query = query
+                    .Where(x => x.CreateDate.Date <= endDate.Value.Date);
+            }
+            else
+            {
+                query = query
+                    .Where(x => x.CreateDate.Date >= startDate.Value.Date && x.CreateDate.Date <= endDate.Value.Date);
+            }
+
+            query.ToList()
+                .OrderByDescending(x => x.CreateDate)
+                .GroupBy(x => x.RequestPath)
+                .ToList()
+                .ForEach(x =>
+               {
+                   var logRow = new FilteredLogVM()
+                   {
+                       RequestPath = x.Key,
+                       RequestCount = x.Count()
+                   };
+                   model.Add(logRow);
+               });
 
             return model;
         }

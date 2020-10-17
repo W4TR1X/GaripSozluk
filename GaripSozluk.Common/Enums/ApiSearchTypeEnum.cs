@@ -10,7 +10,7 @@ namespace GaripSozluk.Common.Enums
     {
         [Display(Name ="Yazar")]
         Author,
-        [Display(Name ="Başlık")]
+        [Display(Name ="Kitap, derği, makale adı")]
         Title
     }
 }
