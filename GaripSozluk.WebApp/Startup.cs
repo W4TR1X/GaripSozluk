@@ -5,12 +5,15 @@ using GaripSozluk.Data;
 using GaripSozluk.Data.Domain;
 using GaripSozluk.Data.Interfaces;
 using GaripSozluk.Data.Repositories;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 
 namespace GaripSozluk.WebApp
@@ -44,6 +47,7 @@ namespace GaripSozluk.WebApp
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostRatingRepository, PostRatingRepository>();
             services.AddScoped<IBlockedUserRepository, BlockedUserRepository>();
+
             //Log Repository
             services.AddScoped<ILogRepository, LogRepository>();
 
@@ -53,10 +57,12 @@ namespace GaripSozluk.WebApp
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IHeaderService, HeaderService>();
             services.AddScoped<IPostService, PostService>();
-            //OpenLibrary Api Service
-            services.AddScoped<IOpenLibraryApiService, OpenLibraryApiService>();
+
             //Log Service
             services.AddScoped<ILogService, LogService>();
+
+            //OpenLibrary Api Service
+            services.AddScoped<IOpenLibraryApiService, OpenLibraryApiService>();
 
 
             services.AddControllersWithViews();

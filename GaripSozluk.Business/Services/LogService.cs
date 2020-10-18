@@ -85,6 +85,24 @@ namespace GaripSozluk.Business.Services
                        RequestPath = x.Key,
                        RequestCount = x.Count()
                    };
+
+                   //logRow.Logs = new List<LogVM>();
+
+                   //foreach (var item in query.ToList().Take(10))
+                   //{
+                   //    var log = new LogVM();
+                   //    log.CreateDate = item.CreateDate;
+                   //    log.Id = item.Id;
+                   //    log.IPAddress = item.IPAddress;
+                   //    log.RequestMethod = item.RequestMethod;
+                   //    log.RequestPath = item.RequestPath;
+                   //    log.ResponseStatusCode = item.ResponseStatusCode;
+                   //    log.RoutePath = item.RoutePath;
+                   //    log.TraceIdentifier = item.TraceIdentifier;
+                   //    log.UserAgent = item.UserAgent;
+                   //    logRow.Logs.Add(log);
+                   //}
+
                    model.Add(logRow);
                });
 
