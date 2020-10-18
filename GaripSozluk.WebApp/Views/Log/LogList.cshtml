@@ -1,0 +1,141 @@
+﻿@model LogResultVM
+@{
+    ViewData["Title"] = "Log Listesi";
+    ViewData["NoSidebar"] = true;
+}
+
+<div>
+    <div class="display-4">
+        <a class="text-success" href="/?headerId=3&amp;categoryId=1">@ViewData["Title"]</a>
+    </div>
+</div>
+
+<br />
+
+<table id="logTable" class="table table-striped table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th class="small">IP adresi</th>
+            <th class="small">İstek metodu</th>
+            <th class="small">İstek yolu</th>
+            <th class="small">Rota yolu</th>
+            <th class="small">Cevap durum kodu</th>
+            <th class="small">Trace Identifier</th>
+            <th class="small">User Agent</th>
+            <th class="small">Create Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Logs)
+        {
+            <tr>
+                <td>@item.IPAddress</td>
+                <td>@item.RequestMethod</td>
+                <td>@item.RequestPath</td>
+                <td>@item.RoutePath</td>
+                <td>@item.ResponseStatusCode</td>
+                <td class="small">@item.TraceIdentifier</td>
+                <td class="small">@item.UserAgent</td>
+                <td class="small">@item.CreateDate</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+    </tfoot>
+</table>
+
+<br />
+
+<div class="container card shadow pt-2 pb-2">
+    <form asp-controller="Log" asp-action="LogList" method="post">
+        <div class="d-flex mt-2">
+            <div class="flex-wrap mr-2 mt-2 align-self-center">
+                <label class="form-label">Tarih aralığı</label>
+            </div>
+            <div class="flex-fill mr-2">
+                <input type="date" class="form-control" id="firstDate" asp-for="FirstDate" min="2020-01-01" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="flex-wrap mr-2 mt-2 align-self-center">
+                <label class="form-label">-</label>
+            </div>
+            <div class="flex-fill mr-2">
+                <input type="date" class="form-control" id="lastDate" asp-for="LastDate" max="@DateTime.Now.Date.ToString("yyyy-MM-dd")">
+            </div>
+            <div class="flex-wrap">
+                <button type="submit" class="btn btn-success">Filtrele</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<br />
+
+@if (Model.FilteredLogs != null)
+{
+    <table id="filterTable" class="table table-striped table-bordered display responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th class="small">İstek yolu</th>
+                <th class="small">İstek sayısı</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FilteredLogs)
+            {
+                <tr>
+                    <td>@item.RequestPath</td>
+                    <td>@item.RequestCount</td>
+                </tr>
+                @*@foreach (var log in item.Logs)
+                {
+                    <tr class="child">
+                        <td>@log.IPAddress</td>
+                        <td>@log.RequestMethod</td>
+                        <td>@log.RequestPath</td>
+                        <td>@log.RoutePath</td>
+                        <td>@log.ResponseStatusCode</td>
+                        <td class="small">@log.TraceIdentifier</td>
+                        <td class="small">@log.UserAgent</td>
+                        <td class="small">@log.CreateDate</td>
+                    </tr>
+                }*@
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+}
+
+<br />
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        $("#lastDate").attr("min", $("#firstDate").val());
+
+        $("#firstDate").on("change", function (e) {
+            $("#lastDate").attr("min", $(this).val());
+        });
+
+        $(document).ready(function () {
+            $('#logTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Turkish.json"
+                },
+                fixedHeader: true,
+                order: [[7, 'desc']]
+            });
+
+            $('#filterTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Turkish.json"
+                },
+                fixedHeader: true,
+                order: [[1, 'desc']],
+            });
+        });
+    </script>
+
+}
