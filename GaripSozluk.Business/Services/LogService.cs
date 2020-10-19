@@ -58,25 +58,26 @@ namespace GaripSozluk.Business.Services
 
             var query = _logRepository.GetAll();
 
-            if (startDate.HasValue && !endDate.HasValue)
+            if (startDate.HasValue /*&& !endDate.HasValue*/)
             {
                 query = query
                     .Where(x => x.CreateDate.Date >= startDate.Value.Date);
             }
-            else if (endDate.HasValue && !startDate.HasValue)
+            /*else*/ if (endDate.HasValue/* && !startDate.HasValue*/)
             {
                 query = query
                     .Where(x => x.CreateDate.Date <= endDate.Value.Date);
             }
-            else
-            {
-                query = query
-                    .Where(x => x.CreateDate.Date >= startDate.Value.Date && x.CreateDate.Date <= endDate.Value.Date);
-            }
+            //else
+            //{
+            //    query = query
+            //        .Where(x => x.CreateDate.Date >= startDate.Value.Date && x.CreateDate.Date <= endDate.Value.Date);
+            //}
 
             query.ToList()
                 .OrderByDescending(x => x.CreateDate)
                 .GroupBy(x => x.RequestPath)
+                .Take(10)
                 .ToList()
                 .ForEach(x =>
                {
