@@ -10,6 +10,8 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using GaripSozluk.Common.ViewModels.Api;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GaripSozluk.Business.Services
 {
@@ -22,7 +24,10 @@ namespace GaripSozluk.Business.Services
         private readonly IHeaderRepository _headerRepository;
         private readonly IPostRepository _postRepository;
         private readonly IPostRatingRepository _postRatingRepository;
+
         private readonly IOpenLibraryApiService _openLibraryApiService;
+
+        private readonly ILogRepository _logRepository;
 
         private readonly IPostService _postService;
         private readonly IUserService _userService;
@@ -33,6 +38,7 @@ namespace GaripSozluk.Business.Services
             IPostRepository postRepository,
             IPostRatingRepository postRatingRepository,
             IOpenLibraryApiService openLibraryApiService,
+            ILogRepository logRepository,
             IPostService postService,
             IUserService userService)
         {
@@ -41,6 +47,7 @@ namespace GaripSozluk.Business.Services
             _postRepository = postRepository;
             _postRatingRepository = postRatingRepository;
 
+            _logRepository = logRepository;
             _openLibraryApiService = openLibraryApiService;
 
             _postService = postService;
@@ -429,6 +436,123 @@ namespace GaripSozluk.Business.Services
             }
 
             return insertedHeaderCount;
+        }
+
+        public IList<HeaderRowVM> GetAllHeaders()
+        {
+            return _headerRepository.GetAll().Include("Posts").ToList().Select(x =>
+                new HeaderRowVM()
+                {
+                    HeaderId = x.Id,
+                    PostCount = x.Posts.Count,
+                    Title = x.Title
+                }
+            ).ToList();
+        }
+
+        public void AddYesterdaysLogs()
+        {
+            /* 
+                5 - Her gün saat 01:00’da çalıştırılacak.Job her çalıştırıldığında 1 adet başlık kaydı açılacak. 
+    
+                Başlık bir önceki günkü log kayıtlarını yeni bir post başlığı ve yorum alanında gösterecek halde hazırlanmalıdır. 
+                    Örneğin: Bugün 19.10.2020 ise bugün 01:00’da 
+                    “18.10.2020 günü log listesi(log)” adında bir başlık ve 
+                        içerisinde 18 ekim tarihli log kayıtları listelenmiş olmalıdır. 
+                        Liste bir tablo halinde değil, bir başlık altındaki yorumlar şeklinde yer almalıdır.
+        
+                    Bu başlık sadece “Admin” rolündeki kişi tarafından görüntülenebilecektir.
+            */
+
+            var date = DateTime.Now.AddDays(-1).Date;
+
+            var headerTitle = date.ToString("dd MMMM yyyy") + " günü log listesi (log)";
+
+            var header = new Header()
+            {
+                CategoryId = _categoryRepository.GetOrCreate("Log").Id,
+                CreateDate = DateTime.Now,
+                Title = headerTitle,
+                UserId = 1004, //Bot'un id'si                
+            };
+
+            var logList = _logRepository.GetAll()
+                .Where(x => x.CreateDate.Date == DateTime.Now.AddDays(-1).Date)
+                .ToList();
+
+            _headerRepository.Add(header);
+            _headerRepository.Save();
+
+            header.Posts = new List<Post>();
+
+            foreach (var log in logList)
+            {
+                header.Posts.Add(new Post
+                {
+                    // Rota yolu   Cevap durum kodu    İz tanımlayıcı 
+
+                    Content = $"{log.IPAddress} adresinden, \"{log.RequestMethod}\" metodu ile \"{log.RequestPath}\" adresine \"{log.UserAgent}\" kullanılarak istek yapılmıştır. " +
+                              $"Cevap olarak \"{log.ResponseStatusCode}\" dönmüştür. \n (Trace identifier: {log.TraceIdentifier}), Rota yolu \"{log.RoutePath}\"  ",
+
+                    CreateDate = log.CreateDate,
+                    UserId = 1004 //Bot'un id'si                
+                });
+            }
+
+            _postRepository.Save();
+        }
+
+        public void AddYesterdaysMostRequestedPathLogs()
+        {
+            /*
+                 6-	Günde 1 kez çalışacak şekilde yeni bir job daha yaratılacak. Job api projesi içinden tetiklenecektir.
+                 7-	Her gün saat 01:10’da çalıştırılacak. Job her çalıştırıldığında 1 adet başlık kaydı açılacak. 
+
+                     Başlık bir önceki gün en fazla istek yapılan bağlantıları gösterecek halde hazırlanmalıdır. 
+                     Örneğin: Bugün 19.10.2020 ise bugün 01:10’da 
+                         “18.10.2020 gününde en fazla istek yapılan adresle(log-request)” adında bir başlık ve 
+                         içerisinde 18 ekim tarihli en fazla kullanılan request path kayıtları listelenmiş olmalıdır. 
+                         Liste bir tablo halinde değil, bir başlık altındaki yorumlar şeklinde yer almalıdır.
+                         Yorum şablonu şöyle olmalıdır: 
+                             “/Log/List adresine yapılan istek gün içerisinde 235 defa çağrılmıştır.”
+
+                     Bu başlık sadece “Admin” rolündeki kişi tarafından görüntülenebilecektir.
+            */
+
+            var date = DateTime.Now.AddDays(-1).Date;
+
+            var headerTitle = date.ToString("dd MMMM yyyy") + " tarihinde en fazla istek yapılan adresler (log-request)";
+
+            var header = new Header()
+            {
+                CategoryId = _categoryRepository.GetOrCreate("Log").Id,
+                CreateDate = DateTime.Now,
+                Title = headerTitle,
+                UserId = 1004, //Bot'un id'si                
+            };
+
+            var logGroupList = _logRepository.GetAll().ToList()
+                .Where(x => x.CreateDate.Date == date)
+                .GroupBy(x => x.RequestPath)
+                .OrderByDescending(x => x.Count())
+                .ToList();
+
+            _headerRepository.Add(header);
+            _headerRepository.Save();
+
+            header.Posts = new List<Post>();
+
+            foreach (var logGroup in logGroupList)
+            {
+                header.Posts.Add(new Post
+                {
+                    Content = string.Format("\"{0}\" adresine yapılan istek gün içerisinde {1} defa çağrılmıştır.", logGroup.Key, logGroup.Count()),
+                    CreateDate = DateTime.Now,
+                    UserId = 1004 //Bot'un id'si                
+                });
+            }
+
+            _postRepository.Save();
         }
     }
 }

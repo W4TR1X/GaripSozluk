@@ -46,7 +46,37 @@ namespace GaripSozluk.Data
             builder.Entity<AppRole>().HasData(new List<AppRole>()
             {
                 new AppRole("User"){ Id=1, NormalizedName="USER" },
-                new AppRole("Admin"){ Id=2, NormalizedName="ADMIN" }
+                new AppRole("Admin"){ Id=2, NormalizedName="ADMIN" },
+                new AppRole("Bot"){ Id=3, NormalizedName="BOT" }
+            });
+
+            builder.Entity<AppUser>().HasData(new List<AppUser>() 
+            {
+                new AppUser()
+                {
+                    Id=1004,
+                    UserName="HangfireBot", 
+                    NormalizedUserName="HANGFIREBOT" ,
+                    Email=null,
+                    NormalizedEmail=null,
+                    EmailConfirmed=false,
+                    PasswordHash    ="AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==",//Parola Hf1234@
+                    SecurityStamp   ="XXMPKO5EG2J4S353GLJVNDBUK3JYJXET",
+                    ConcurrencyStamp  ="dffe6722-61d7-4b3d-8561-4291e0695601",
+                    PhoneNumber =null,
+                    PhoneNumberConfirmed  =false,
+                    TwoFactorEnabled  =false,
+                    LockoutEnd =DateTime.MaxValue,
+                    LockoutEnabled =true,
+                    AccessFailedCount =0,
+                    BirthDate  =DateTime.Now,
+                    CreateDate =DateTime.Now,
+                    UpdateDate=null
+                }
+            });
+
+            builder.Entity<IdentityUserRole<int>>().HasData(new List<IdentityUserRole<int>>() {
+                new IdentityUserRole<int>() { UserId = 1004, RoleId = 3 } 
             });
 
             builder.Entity<Category>().HasData(new List<Category>

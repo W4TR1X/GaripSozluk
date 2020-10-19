@@ -1,6 +1,7 @@
 ﻿using GaripSozluk.Business.Interfaces;
 using GaripSozluk.Data.Domain;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
@@ -36,14 +37,18 @@ namespace GaripSozluk.Business.Middleware
 
                 var routePath = "";
 
-                if (context.Request.Path.HasValue)
-                {
-                    routePath += context.Request.Path.Value; // string.Join("/", context.RouteData.Values.Values);
-                }
+                var routeDataValues = context.GetRouteData().Values;
 
-                if (context.Request.QueryString.HasValue)
+                if (routeDataValues.Count > 0)
                 {
-                    routePath += context.Request.QueryString.Value;
+                    foreach (var item in routeDataValues)
+                    {
+                        routePath += "/" + item.Key + ": " + item.Value;
+                    }
+                }
+                else
+                {
+                    routePath = "/";
                 }
 
                 var log = new Log()

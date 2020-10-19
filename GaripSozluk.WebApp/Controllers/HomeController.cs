@@ -68,7 +68,12 @@ namespace GaripSozluk.WebApp.Controllers
 
             return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = _headerService.GetRandomHeaderIndex(HttpContext.User) }));
         }
-         
+
+        [AllowAnonymous]
+        public IActionResult ApiHeaderList()
+        {
+            return View();
+        }         
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

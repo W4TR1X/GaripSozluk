@@ -1,6 +1,7 @@
 ﻿using GaripSozluk.Common.ViewModels.Header;
 using GaripSozluk.Common.ViewModels.Post;
 using GaripSozluk.Data.Domain;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace GaripSozluk.Business.Interfaces
     public interface IHeaderService
     {
         IList<HeaderRowVM> GetHeadersByCategoryId(ClaimsPrincipal contextUser, int categoryId);
+
+        IList<HeaderRowVM> GetAllHeaders();
 
         Header GetHeaderById(ClaimsPrincipal contextUser, int id);
 
@@ -29,5 +32,10 @@ namespace GaripSozluk.Business.Interfaces
         PostHeaderListVM Search(ClaimsPrincipal contextUser, HeaderSearchVM searchModel);
 
         int BulkInsert(ClaimsPrincipal contextUser, List<string> headerList);
+
+
+       
+        void AddYesterdaysLogs();
+        void AddYesterdaysMostRequestedPathLogs();
     }
 }

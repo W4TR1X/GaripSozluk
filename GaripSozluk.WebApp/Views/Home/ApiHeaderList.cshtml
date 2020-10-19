@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "Api Başlık Listesi";
+}
+
+
+<div class="container">
+    <br />
+    <div class="row">
+        <button id="refreshButton" class="btn btn-success btn-block" type="button">Sayfayı yenile</button>
+    </div>
+    <br />
+    <div class="row">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th class="text-success">Başlık adı</th>
+                    <th class="text-success">Yorum sayısı</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            requestHeaderList();
+
+            $("refreshButton").on("click", function () {
+                requestHeaderList();
+            })
+        });
+
+        function requestHeaderList() {
+            var table = $("#tableBody");
+            table.html("");
+
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:6025/Header",
+                data: "",
+                dataType: "json",
+                success: function (response) {
+                    renderHeaderList(response);
+                },
+                error: function () {
+                    swal({
+                        text: "Bir hata oluştu!",
+                        title: "Hata",
+                        type: "error",
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Tamam",
+                        closeOnConfirm: false
+                    });
+                }
+            });
+        }
+
+        function renderHeaderList(json) {
+            var table = $("#tableBody");
+            table.html("");
+
+            $.each(json, function (indexInArray, header) {
+                var tr =
+                    '<tr id=' + header.headerId + '><td>' +
+                    '' + header.title + '' +
+                    '</td><td>' +
+                    '' + header.postCount + '' +
+                    '</td></tr>';
+                table.append(tr);
+            });
+        }
+    </script>
+
+}
+
