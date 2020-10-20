@@ -13,7 +13,7 @@ namespace GaripSozluk.Data.Domain
         public DateTime? UpdateDate { get; set; }
 
 
-
+        public virtual ICollection<IdentityUserRole<int>> Roles { get; set; }
         public virtual ICollection<Header> Headers { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
         public virtual ICollection<PostRating> Ratings { get; set; }

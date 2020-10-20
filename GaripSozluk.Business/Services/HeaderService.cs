@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using GaripSozluk.Common.ViewModels.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using GaripSozluk.Common.ViewModels.User;
 
 namespace GaripSozluk.Business.Services
 {
@@ -22,7 +23,6 @@ namespace GaripSozluk.Business.Services
 
         private readonly ICategoryRepository _categoryRepository;
         private readonly IHeaderRepository _headerRepository;
-        private readonly IPostRepository _postRepository;
         private readonly IPostRatingRepository _postRatingRepository;
 
         private readonly IOpenLibraryApiService _openLibraryApiService;
@@ -35,7 +35,6 @@ namespace GaripSozluk.Business.Services
         public HeaderService(
             ICategoryRepository categoryRepository,
             IHeaderRepository headerRepository,
-            IPostRepository postRepository,
             IPostRatingRepository postRatingRepository,
             IOpenLibraryApiService openLibraryApiService,
             ILogRepository logRepository,
@@ -44,7 +43,6 @@ namespace GaripSozluk.Business.Services
         {
             _categoryRepository = categoryRepository;
             _headerRepository = headerRepository;
-            _postRepository = postRepository;
             _postRatingRepository = postRatingRepository;
 
             _logRepository = logRepository;
@@ -57,49 +55,55 @@ namespace GaripSozluk.Business.Services
 
         public Header GetHeaderById(ClaimsPrincipal contextUser, int id)
         {
-            var blockedUserIds = _userService.GetBlockedUserIds(contextUser);
+            var blockedUserIds = _userService.GetUserWithRoles(contextUser).BlockedUserIds;
 
             return _headerRepository.Get(x => x.Id == id && !blockedUserIds.Contains(x.UserId));
         }
 
         public IList<HeaderRowVM> GetHeadersByCategoryId(ClaimsPrincipal contextUser, int categoryId)
         {
-            var blockedUserIds = _userService.GetBlockedUserIds(contextUser);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             var headers = _headerRepository
-                .Where(x => x.CategoryId == categoryId && !blockedUserIds.Contains(x.UserId))
-                .Select(x => new HeaderRowVM()
-                {
-                    HeaderId = x.Id,
-                    Title = x.Title,
-                    PostCount = x.Posts.Count - 1
-                }).ToList();
+                .Where(x => x.CategoryId == categoryId && !user.BlockedUserIds.Contains(x.UserId));
 
-            return headers;
+            if (!user.IsAdmin)
+            {
+                headers = headers.Where(x => x.IsAdminOnly == false);
+            }
+
+            var headerVMs = headers.Select(x => new HeaderRowVM()
+            {
+                HeaderId = x.Id,
+                Title = x.Title,
+                PostCount = x.Posts.Count - 1
+            }).ToList();
+
+            return headerVMs;
         }
         public int GetRandomHeaderIndex(ClaimsPrincipal contextUser)
         {
-            var blockedUserIds = _userService.GetBlockedUserIds(contextUser);
+            var user = _userService.GetUserWithRoles(contextUser);
 
-            var headerIds = _headerRepository.Where(x => !blockedUserIds.Contains(x.UserId)).Select(x => x.Id).ToList();
-            return headerIds[new Random().Next(headerIds.Count - 1)];
+            var headerIds = _headerRepository.Where(x => !user.BlockedUserIds.Contains(x.UserId));
+
+            if (!user.IsAdmin)
+            {
+                headerIds = headerIds.Where(x => x.IsAdminOnly == false);
+            }
+
+            var headerIdList = headerIds.Select(x => x.Id).ToList();
+            return headerIdList[new Random().Next(headerIdList.Count - 1)];
         }
 
         //ToDo: OK! PageNumber 'pageNumber' olarak değiştirelim. 
-        public PostHeaderListVM GetHeaderPosts(ClaimsPrincipal user, int headerId, int? categoryId, int pageNumber = 1)
+        public PostHeaderListVM GetHeaderPosts(ClaimsPrincipal contextUser, int headerId, int? categoryId, int pageNumber = 1)
         {
-            var userId = 0;
-
-            if (user.Claims.Any())
-            {
-                userId = _userService.GetUser(user).Id;
-            }
-
-            var blockedUserIds = _userService.GetBlockedUserIds(user);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             var model = new PostHeaderListVM();
 
-            var headerEntity = _headerRepository.Where(x => x.Id == headerId && !blockedUserIds.Contains(x.UserId), new List<string> { "User", "Posts" }).FirstOrDefault();
+            var headerEntity = _headerRepository.Where(x => x.Id == headerId && !user.BlockedUserIds.Contains(x.UserId), new List<string> { "User", "Posts" }).FirstOrDefault();
 
             var header = new PostHeaderVM();
 
@@ -107,11 +111,17 @@ namespace GaripSozluk.Business.Services
 
             if (headerEntity == null)
             {
-                model = GetPopularHeaders(user);
+                model = GetPopularHeaders(contextUser);
                 return model;
             }
             else
             {
+                if(headerEntity.IsAdminOnly && !user.IsAdmin) // Admin check
+                {
+                    model = GetPopularHeaders(contextUser);
+                    return model;
+                }
+
                 var title = headerEntity.Title;
                 var isBook = title.EndsWith("(Kitap)");
                 var isAuthor = title.EndsWith("(Yazar)");
@@ -141,7 +151,7 @@ namespace GaripSozluk.Business.Services
             header.HeaderDate = headerEntity.UpdateDate ?? headerEntity.CreateDate;
 
             //ToDo: OK! Sadece count çekeceksen where sorgusu yazmana gerek yok single olarak count içerisinde filtre yapabilirsin. Örnek kodu aşağıda paylaşıyorum.
-            var postCount = headerEntity.Posts.Count(x => !blockedUserIds.Contains(x.UserId));
+            var postCount = headerEntity.Posts.Count(x => !user.BlockedUserIds.Contains(x.UserId));
 
             //Örnek Kod: 
             //var postCount = headerEntity.Posts.Count(x => !blockedUserIds.Contains(x.UserId));
@@ -160,7 +170,7 @@ namespace GaripSozluk.Business.Services
             if (headerEntity.Posts != null)
             {
                 var posts = headerEntity.Posts
-                    .Where(x => !blockedUserIds.Contains(x.UserId))
+                    .Where(x => !user.BlockedUserIds.Contains(x.UserId))
                     .Skip((pageNumber - 1) * PageMaxItemCount)
                     .Take(PageMaxItemCount)
                     .ToList();
@@ -179,9 +189,9 @@ namespace GaripSozluk.Business.Services
 
                     };
 
-                    if (userId > 0)
+                    if (user.Id > 0)
                     {
-                        var rating = _postRatingRepository.Get(x => x.UserId == userId && x.PostId == post.Id);
+                        var rating = _postRatingRepository.Get(x => x.UserId == user.Id && x.PostId == post.Id);
 
                         if (rating != null)
                         {
@@ -225,23 +235,20 @@ namespace GaripSozluk.Business.Services
         }
 
         //ToDo: OK! categortId 'categoryId' olarak değiştirelim.
-        public PostHeaderListVM GetPopularHeaders(ClaimsPrincipal user, int categoryId = 1)
+        public PostHeaderListVM GetPopularHeaders(ClaimsPrincipal contextUser, int categoryId = 1)
         {
-            var userId = 0;
-
-            if (user.Claims.Any())
-            {
-                userId = _userService.GetUser(user).Id;
-            }
-
-            var blockedUserIds = _userService.GetBlockedUserIds(user);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             var model = new PostHeaderListVM();
 
-            _headerRepository
-                .Where(x => x.CategoryId == categoryId && !blockedUserIds.Contains(x.UserId), new List<string> { "User", "Posts" })
-                .Take(8)
-                .ToList()
+            var headerQuery = _headerRepository.Where(x => x.CategoryId == categoryId && !user.BlockedUserIds.Contains(x.UserId), new List<string> { "User", "Posts" });
+
+            if (!user.IsAdmin)
+            {
+                headerQuery = headerQuery.Where(x => x.IsAdminOnly == false);
+            }
+
+            headerQuery.Take(8).ToList()
                 .ForEach(x =>
                 {
                     var header = new PostHeaderVM()
@@ -255,7 +262,7 @@ namespace GaripSozluk.Business.Services
                         HeaderDate = x.UpdateDate ?? x.CreateDate
                     };
 
-                    var post = x.Posts.Where(x => !blockedUserIds.Contains(x.UserId))
+                    var post = x.Posts.Where(x => !user.BlockedUserIds.Contains(x.UserId))
                         .OrderByDescending(y => _postService.GetPostRating(y.Id))
                         .FirstOrDefault();
 
@@ -272,9 +279,9 @@ namespace GaripSozluk.Business.Services
                             DislikeCount = _postService.GetDislikeCount(post.Id)
                         };
 
-                        if (userId > 0)
+                        if (user.Id > 0)
                         {
-                            var rating = _postRatingRepository.Get(x => x.UserId == userId && x.PostId == post.Id);
+                            var rating = _postRatingRepository.Get(x => x.UserId == user.Id && x.PostId == post.Id);
 
                             if (rating != null)
                             {
@@ -294,7 +301,7 @@ namespace GaripSozluk.Business.Services
 
         public bool AddNewHeader(ClaimsPrincipal contextUser, NewHeaderVM model)
         {
-            var user = _userService.GetUser(contextUser);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             if (_headerRepository.Where(x => x.CategoryId == model.CategoryId && x.Title == model.Title).Any())
             {
@@ -324,8 +331,8 @@ namespace GaripSozluk.Business.Services
                     CreateDate = header.CreateDate
                 };
 
-                _postRepository.Add(post);
-                _postRepository.Save();
+                _postService.Add(post);
+                _postService.Save();
 
                 return true;
             }
@@ -335,7 +342,7 @@ namespace GaripSozluk.Business.Services
 
         public bool AddNewPost(ClaimsPrincipal contextUser, NewPostVM model)
         {
-            var user = _userService.GetUser(contextUser);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             var post = new Post()
             {
@@ -345,26 +352,19 @@ namespace GaripSozluk.Business.Services
                 CreateDate = DateTime.Now
             };
 
-            _postRepository.Add(post);
-            _postRepository.Save();
+            _postService.Add(post);
+            _postService.Save();
 
             return true;
         }
 
         public PostHeaderListVM Search(ClaimsPrincipal contextUser, HeaderSearchVM searchModel)
         {
-            var userId = 0;
-
-            var blockedUserIds = _userService.GetBlockedUserIds(contextUser);
-
-            if (contextUser.Claims.Any())
-            {
-                userId = _userService.GetUser(contextUser).Id;
-            }
+            var user = _userService.GetUserWithRoles(contextUser);
 
             var model = new PostHeaderListVM();
 
-            var query = _headerRepository.Where(x => x.Title.Contains(searchModel.SearchText) && !blockedUserIds.Contains(x.UserId), new List<string> { "Posts", "User" });
+            var query = _headerRepository.Where(x => x.Title.Contains(searchModel.SearchText) && !user.BlockedUserIds.Contains(x.UserId), new List<string> { "Posts", "User" });
 
             if (searchModel.StartDate.HasValue)
             {
@@ -383,6 +383,11 @@ namespace GaripSozluk.Business.Services
             else
             {
                 query = query.OrderBy(x => x.Title);
+            }
+
+            if (!user.IsAdmin)
+            {
+                query = query.OrderByDescending(x => x.IsAdminOnly == false);
             }
 
             query.ToList().ForEach(x =>
@@ -406,7 +411,7 @@ namespace GaripSozluk.Business.Services
 
         public int BulkInsert(ClaimsPrincipal contextUser, List<string> headerList)
         {
-            var user = _userService.GetUser(contextUser);
+            var user = _userService.GetUserWithRoles(contextUser);
 
             int insertedHeaderCount = 0;
 
@@ -438,9 +443,18 @@ namespace GaripSozluk.Business.Services
             return insertedHeaderCount;
         }
 
-        public IList<HeaderRowVM> GetAllHeaders()
+        public IList<HeaderRowVM> GetAllHeaders(ClaimsPrincipal contextUser)
         {
-            return _headerRepository.GetAll().Include("Posts").ToList().Select(x =>
+            var user = _userService.GetUserWithRoles(contextUser);
+
+            var headers = _headerRepository.GetAll().Include("Posts");
+
+            if (!user.IsAdmin)
+            {
+                headers = headers.Where(x => x.IsAdminOnly == false);
+            }
+
+            return headers.ToList().Select(x =>
                 new HeaderRowVM()
                 {
                     HeaderId = x.Id,
@@ -473,7 +487,8 @@ namespace GaripSozluk.Business.Services
                 CategoryId = _categoryRepository.GetOrCreate("Log").Id,
                 CreateDate = DateTime.Now,
                 Title = headerTitle,
-                UserId = 1004, //Bot'un id'si                
+                UserId = 1004, //Bot'un id'si  
+                IsAdminOnly = true
             };
 
             var logList = _logRepository.GetAll()
@@ -499,7 +514,7 @@ namespace GaripSozluk.Business.Services
                 });
             }
 
-            _postRepository.Save();
+            _postService.Save();
         }
 
         public void AddYesterdaysMostRequestedPathLogs()
@@ -528,7 +543,8 @@ namespace GaripSozluk.Business.Services
                 CategoryId = _categoryRepository.GetOrCreate("Log").Id,
                 CreateDate = DateTime.Now,
                 Title = headerTitle,
-                UserId = 1004, //Bot'un id'si                
+                UserId = 1004, //Bot'un id'si   
+                IsAdminOnly = true
             };
 
             var logGroupList = _logRepository.GetAll().ToList()
@@ -552,7 +568,7 @@ namespace GaripSozluk.Business.Services
                 });
             }
 
-            _postRepository.Save();
+            _postService.Save();
         }
     }
 }

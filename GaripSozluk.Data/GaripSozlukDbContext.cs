@@ -54,13 +54,34 @@ namespace GaripSozluk.Data
             {
                 new AppUser()
                 {
+                    Id=1,
+                    UserName="Mustafa",
+                    NormalizedUserName="MUSTAFA" ,
+                    Email=null,
+                    NormalizedEmail=null,
+                    EmailConfirmed=false,
+                    PasswordHash    ="AQAAAAEAACcQAAAAEK3yu3mkq1NvQOijcZ0u1cvomfFXZNVO65sjGbjZcEjY1tNKYJ9VyEcG1vZ9TbY82A==", //Parola M1234d@
+                    SecurityStamp   ="RZUW3UX54HAWZUMZGYM2Y3J3XG4R7FE3",
+                    ConcurrencyStamp  ="f3a1e6ab-3c15-43ef-87d7-d83c22285d13",
+                    PhoneNumber =null,
+                    PhoneNumberConfirmed  =false,
+                    TwoFactorEnabled  =false,
+                    LockoutEnd =null,
+                    LockoutEnabled =false,
+                    AccessFailedCount =0,
+                    BirthDate  = new DateTime(1986,05,07),
+                    CreateDate =DateTime.Now,
+                    UpdateDate=null
+                },
+                new AppUser()
+                {
                     Id=1004,
                     UserName="HangfireBot", 
                     NormalizedUserName="HANGFIREBOT" ,
                     Email=null,
                     NormalizedEmail=null,
                     EmailConfirmed=false,
-                    PasswordHash    ="AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==",//Parola Hf1234@
+                    PasswordHash    ="AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==", //Parola Hf1234@
                     SecurityStamp   ="XXMPKO5EG2J4S353GLJVNDBUK3JYJXET",
                     ConcurrencyStamp  ="dffe6722-61d7-4b3d-8561-4291e0695601",
                     PhoneNumber =null,
@@ -76,7 +97,9 @@ namespace GaripSozluk.Data
             });
 
             builder.Entity<IdentityUserRole<int>>().HasData(new List<IdentityUserRole<int>>() {
-                new IdentityUserRole<int>() { UserId = 1004, RoleId = 3 } 
+                new IdentityUserRole<int>() { UserId = 1004, RoleId = 3 },
+                new IdentityUserRole<int>() { UserId = 1, RoleId = 1 },
+                 new IdentityUserRole<int>() { UserId = 1, RoleId = 2 }
             });
 
             builder.Entity<Category>().HasData(new List<Category>

@@ -97,13 +97,13 @@ namespace GaripSozluk.Business.Services
 
         public void BlockUser(ClaimsPrincipal user, int blockedUserId)
         {
-            var thisUser = GetUser(user);
+            var thisUser = GetUserWithRoles(user);
 
-            if (thisUser.Id != blockedUserId && !_blockedUserRepository.Where(x => x.UserId == thisUser.Id && x.BlockedUserId == blockedUserId).Any())
+            if (thisUser.User.Id != blockedUserId && !_blockedUserRepository.Where(x => x.UserId == thisUser.User.Id && x.BlockedUserId == blockedUserId).Any())
             {
                 _blockedUserRepository.Add(new BlockedUser()
                 {
-                    UserId = thisUser.Id,
+                    UserId = thisUser.User.Id,
                     BlockedUserId = blockedUserId,
                     CreateDate = DateTime.Now
                 });
@@ -112,10 +112,47 @@ namespace GaripSozluk.Business.Services
             }
         }
 
-        public AppUser GetUser(ClaimsPrincipal user)
+        public UserWithRolesVM GetUserWithRoles(ClaimsPrincipal user)
         {
             var thisUser = _userManager.GetUserAsync(user).Result;
-            return thisUser;
+
+            if (thisUser != null)
+            {
+                var userRoles = _userManager.GetRolesAsync(thisUser).Result;
+
+                //thisUser.
+
+                return new UserWithRolesVM()
+                {
+                    Id = thisUser.Id,
+                    User = thisUser,
+                    Roles = userRoles,
+                    IsAdmin = IsAdmin(userRoles),
+                    BlockedUserIds = GetBlockedUserIds(user)
+                };
+            }
+
+            return new UserWithRolesVM();
+        }
+
+        public bool IsAdmin(ClaimsPrincipal user)
+        {
+            if (user != null && user.Claims.Count() > 0)
+            {
+                return IsAdmin(GetUserWithRoles(user).Roles);
+            }
+
+            return false;
+        }
+
+        public bool IsAdmin(ICollection<string> roles)
+        {
+            if (roles.Contains("Admin"))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public AppUser GetUserById(int id)

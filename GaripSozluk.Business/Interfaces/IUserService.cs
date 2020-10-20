@@ -17,17 +17,15 @@ namespace GaripSozluk.Business.Interfaces
 
         void Logout();
 
-        void BlockUser(ClaimsPrincipal user, int blockedUserId);
-
-        AppUser GetUser(ClaimsPrincipal user);
+        UserWithRolesVM GetUserWithRoles(ClaimsPrincipal user);
 
         AppUser GetUserById(int id);
+       
+        //bool IsAdmin(ClaimsPrincipal user);
+        //List<int> GetBlockedUserIds(ClaimsPrincipal user);
 
-
-        List<int> GetBlockedUserIds(ClaimsPrincipal user);
         List<BlockedUserVM> GetBlockedUsers(ClaimsPrincipal user);
-
-
+        void BlockUser(ClaimsPrincipal user, int blockedUserId);
         void RemoveBlockedUser(ClaimsPrincipal user, int blockedUserId);
     }
 }

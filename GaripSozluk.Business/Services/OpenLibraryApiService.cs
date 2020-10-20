@@ -2,6 +2,7 @@
 using GaripSozluk.Common.Enums;
 using GaripSozluk.Common.ViewModels.Api;
 using GaripSozluk.Common.ViewModels.Api.Extensions;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -13,6 +14,12 @@ namespace GaripSozluk.Business.Services
 {
     public class OpenLibraryApiService : IOpenLibraryApiService
     {
+        private readonly IConfiguration _configuration;
+        public OpenLibraryApiService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public ApiResultVM Search(string queryText, ApiSearchTypeEnum searchType)
         {
             var content = new OpenLibrarySearchJsonVM();
@@ -21,11 +28,11 @@ namespace GaripSozluk.Business.Services
 
             if(searchType== ApiSearchTypeEnum.Author)
             {
-                query = $"http://openlibrary.org/search.json?author=" + queryText;
+                query = _configuration.GetSection("Paths:OpenLibraryAuthorSearchPath").Value + queryText;
             }
             else
             {
-                query = $"http://openlibrary.org/search.json?title=" + queryText;
+                query = _configuration.GetSection("Paths:OpenLibraryTitleSearchPath").Value + queryText;
             }
 
 

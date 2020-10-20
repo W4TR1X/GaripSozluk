@@ -10,8 +10,6 @@ namespace GaripSozluk.Data.Domain
         public int UserId { get; set; }
         public string Content { get; set; }
 
-
-
         public virtual Header Header { get; set; }
         public virtual AppUser User { get; set; }
 

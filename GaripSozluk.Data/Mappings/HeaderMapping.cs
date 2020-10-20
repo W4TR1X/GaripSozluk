@@ -20,17 +20,20 @@ namespace GaripSozluk.Data.Mappings
             builder.Property(x => x.ClickCount)
                 .IsRequired();
 
+            builder.Property(x => x.IsAdminOnly)
+                .HasDefaultValue(false)
+                .IsRequired();
+
             builder.HasOne(x => x.User)
                 .WithMany(x => x.Headers)
                 .HasForeignKey(x => x.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
-         
+
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Headers)
                 .HasForeignKey(x => x.CategoryId)
                 .IsRequired();
         }
-    }    
-}        
-         
+    }
+}

@@ -25,9 +25,42 @@ namespace GaripSozluk.Business.Services
             _userService = userService;
         }
 
+        public void UpVote(ClaimsPrincipal user, int postId)
+        {
+            var userId = _userService.GetUserWithRoles(user).User.Id;
+            var postRating = _postRatingRepository.Get(x => x.UserId == userId && x.PostId == postId);
+
+            if (postRating != null)
+            {
+                if (postRating.IsLiked)
+                {
+                    _postRatingRepository.Remove(postRating);
+                }
+                else
+                {
+                    postRating.IsLiked = true;
+                    postRating.UpdateDate = DateTime.Now;
+                }
+            }
+            else
+            {
+                postRating = new PostRating()
+                {
+                    PostId = postId,
+                    CreateDate = DateTime.Now,
+                    IsLiked = true,
+                    UserId = userId
+                };
+
+                _postRatingRepository.Add(postRating);
+            }
+
+            _postRatingRepository.Save();
+        }
+
         public void DownVote(ClaimsPrincipal user, int postId)
         {
-            var userId = _userService.GetUser(user).Id;
+            var userId = _userService.GetUserWithRoles(user).User.Id;
             var postRating = _postRatingRepository.Get(x => x.UserId == userId && x.PostId == postId);
 
             if (postRating != null)
@@ -75,37 +108,14 @@ namespace GaripSozluk.Business.Services
             return totalRating;
         }
 
-        public void UpVote(ClaimsPrincipal user, int postId)
+        public Post Add(Post post)
         {
-            var userId = _userService.GetUser(user).Id;
-            var postRating = _postRatingRepository.Get(x => x.UserId == userId && x.PostId == postId);
+            return _postRepository.Add(post);
+        }
 
-            if (postRating != null)
-            {
-                if (postRating.IsLiked)
-                {
-                    _postRatingRepository.Remove(postRating);
-                }
-                else
-                {
-                    postRating.IsLiked = true;
-                    postRating.UpdateDate = DateTime.Now;
-                }
-            }
-            else
-            {
-                postRating = new PostRating()
-                {
-                    PostId = postId,
-                    CreateDate = DateTime.Now,
-                    IsLiked = true,
-                    UserId = userId
-                };
-
-                _postRatingRepository.Add(postRating);
-            }
-
-            _postRatingRepository.Save();
+        public void Save()
+        {
+            _postRepository.Save();
         }
     }
 }

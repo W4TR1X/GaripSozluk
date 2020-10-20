@@ -17,6 +17,7 @@ namespace GaripSozluk.Data.Mappings
             builder.Property(x => x.UpdateDate);
 
             builder.Property(x => x.BirthDate);
+
         }
     }
 }

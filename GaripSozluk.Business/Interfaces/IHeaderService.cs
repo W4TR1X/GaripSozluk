@@ -15,7 +15,7 @@ namespace GaripSozluk.Business.Interfaces
     {
         IList<HeaderRowVM> GetHeadersByCategoryId(ClaimsPrincipal contextUser, int categoryId);
 
-        IList<HeaderRowVM> GetAllHeaders();
+        IList<HeaderRowVM> GetAllHeaders(ClaimsPrincipal contextUser);
 
         Header GetHeaderById(ClaimsPrincipal contextUser, int id);
 

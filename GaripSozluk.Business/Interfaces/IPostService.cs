@@ -21,5 +21,9 @@ namespace GaripSozluk.Business.Interfaces
         int GetLikeCount(int postId);
 
         int GetDislikeCount(int postId);
+
+        Post Add(Post post);
+
+        void Save();
     }
 }

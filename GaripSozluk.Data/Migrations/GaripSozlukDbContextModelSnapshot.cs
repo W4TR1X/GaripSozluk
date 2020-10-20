@@ -57,7 +57,7 @@ namespace GaripSozluk.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "580fc229-684a-4889-a8b4-9590735bb57e",
+                            ConcurrencyStamp = "77907242-0a05-44a3-a8fd-11f9c7ea55c8",
                             CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "User",
                             NormalizedName = "USER"
@@ -65,10 +65,18 @@ namespace GaripSozluk.Data.Migrations
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "891a77d4-9ded-4196-abcc-f63a70ea444b",
+                            ConcurrencyStamp = "170af3e6-1845-4573-81b8-3bcff2393c59",
                             CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ConcurrencyStamp = "00afa7c3-082e-4430-9f50-05ccca48feaf",
+                            CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Bot",
+                            NormalizedName = "BOT"
                         });
                 });
 
@@ -146,6 +154,41 @@ namespace GaripSozluk.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            BirthDate = new DateTime(1986, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "f3a1e6ab-3c15-43ef-87d7-d83c22285d13",
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 111, DateTimeKind.Local).AddTicks(9817),
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "MUSTAFA",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK3yu3mkq1NvQOijcZ0u1cvomfFXZNVO65sjGbjZcEjY1tNKYJ9VyEcG1vZ9TbY82A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "RZUW3UX54HAWZUMZGYM2Y3J3XG4R7FE3",
+                            TwoFactorEnabled = false,
+                            UserName = "Mustafa"
+                        },
+                        new
+                        {
+                            Id = 1004,
+                            AccessFailedCount = 0,
+                            BirthDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3196),
+                            ConcurrencyStamp = "dffe6722-61d7-4b3d-8561-4291e0695601",
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3243),
+                            EmailConfirmed = false,
+                            LockoutEnabled = true,
+                            LockoutEnd = new DateTimeOffset(new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Unspecified).AddTicks(9999), new TimeSpan(0, 3, 0, 0, 0)),
+                            NormalizedUserName = "HANGFIREBOT",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "XXMPKO5EG2J4S353GLJVNDBUK3JYJXET",
+                            TwoFactorEnabled = false,
+                            UserName = "HangfireBot"
+                        });
                 });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.BlockedUser", b =>
@@ -168,6 +211,8 @@ namespace GaripSozluk.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BlockedUserId");
 
                     b.HasIndex("UserId");
 
@@ -200,37 +245,37 @@ namespace GaripSozluk.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 895, DateTimeKind.Local).AddTicks(7497),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7131),
                             Title = "gündem"
                         },
                         new
                         {
                             Id = 2,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4567),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7933),
                             Title = "debe"
                         },
                         new
                         {
                             Id = 3,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4591),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7982),
                             Title = "sorunsallar"
                         },
                         new
                         {
                             Id = 4,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4596),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7984),
                             Title = "#spor"
                         },
                         new
                         {
                             Id = 5,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4597),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7985),
                             Title = "#ilişkiler"
                         },
                         new
                         {
                             Id = 6,
-                            CreateDate = new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4602),
+                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7989),
                             Title = "#siyaset"
                         });
                 });
@@ -250,6 +295,11 @@ namespace GaripSozluk.Data.Migrations
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAdminOnly")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -280,7 +330,8 @@ namespace GaripSozluk.Data.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(2000)")
+                        .HasMaxLength(2000);
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -409,11 +460,33 @@ namespace GaripSozluk.Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1004,
+                            RoleId = 3
+                        },
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 1
+                        },
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -439,6 +512,12 @@ namespace GaripSozluk.Data.Migrations
                 {
                     b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
                         .WithMany("BlockedUsers")
+                        .HasForeignKey("BlockedUserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "Blocked")
+                        .WithMany("BlockedBy")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -518,6 +597,10 @@ namespace GaripSozluk.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
+                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("GaripSozluk.Data.Domain.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")

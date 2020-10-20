@@ -11,6 +11,7 @@ namespace GaripSozluk.Data.Domain
         public string Title { get; set; }
         public int ClickCount { get; set; }
         public int UserId { get; set; }
+        public bool IsAdminOnly { get; set; }
 
         public virtual Category Category { get; set; }
         public virtual AppUser User { get; set; }

@@ -135,11 +135,18 @@ namespace GaripSozluk.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
+                    RoleId = table.Column<int>(nullable: false),
+                    AppUserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -189,6 +196,11 @@ namespace GaripSozluk.Data.Migrations
                 {
                     table.PrimaryKey("PK_BlockedUsers", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_BlockedUsers_AspNetUsers_BlockedUserId",
+                        column: x => x.BlockedUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_BlockedUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
@@ -206,7 +218,8 @@ namespace GaripSozluk.Data.Migrations
                     CategoryId = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 100, nullable: false),
                     ClickCount = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    IsAdminOnly = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -234,7 +247,7 @@ namespace GaripSozluk.Data.Migrations
                     UpdateDate = table.Column<DateTime>(nullable: true),
                     HeaderId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    Content = table.Column<string>(nullable: false)
+                    Content = table.Column<string>(maxLength: 2000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,8 +298,18 @@ namespace GaripSozluk.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "CreateDate", "Name", "NormalizedName", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, "580fc229-684a-4889-a8b4-9590735bb57e", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "User", "USER", null },
-                    { 2, "891a77d4-9ded-4196-abcc-f63a70ea444b", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", "ADMIN", null }
+                    { 1, "77907242-0a05-44a3-a8fd-11f9c7ea55c8", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "User", "USER", null },
+                    { 2, "170af3e6-1845-4573-81b8-3bcff2393c59", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", "ADMIN", null },
+                    { 3, "00afa7c3-082e-4430-9f50-05ccca48feaf", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Bot", "BOT", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "CreateDate", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UpdateDate", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, new DateTime(1986, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), "f3a1e6ab-3c15-43ef-87d7-d83c22285d13", new DateTime(2020, 10, 20, 16, 51, 11, 111, DateTimeKind.Local).AddTicks(9817), null, false, false, null, null, "MUSTAFA", "AQAAAAEAACcQAAAAEK3yu3mkq1NvQOijcZ0u1cvomfFXZNVO65sjGbjZcEjY1tNKYJ9VyEcG1vZ9TbY82A==", null, false, "RZUW3UX54HAWZUMZGYM2Y3J3XG4R7FE3", false, null, "Mustafa" },
+                    { 1004, 0, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3196), "dffe6722-61d7-4b3d-8561-4291e0695601", new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3243), null, false, true, new DateTimeOffset(new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Unspecified).AddTicks(9999), new TimeSpan(0, 3, 0, 0, 0)), null, "HANGFIREBOT", "AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==", null, false, "XXMPKO5EG2J4S353GLJVNDBUK3JYJXET", false, null, "HangfireBot" }
                 });
 
             migrationBuilder.InsertData(
@@ -294,13 +317,28 @@ namespace GaripSozluk.Data.Migrations
                 columns: new[] { "Id", "CreateDate", "Title", "UpdateDate" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 10, 11, 15, 51, 12, 895, DateTimeKind.Local).AddTicks(7497), "gündem", null },
-                    { 2, new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4567), "debe", null },
-                    { 3, new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4591), "sorunsallar", null },
-                    { 4, new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4596), "#spor", null },
-                    { 5, new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4597), "#ilişkiler", null },
-                    { 6, new DateTime(2020, 10, 11, 15, 51, 12, 896, DateTimeKind.Local).AddTicks(4602), "#siyaset", null }
+                    { 1, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7131), "gündem", null },
+                    { 2, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7933), "debe", null },
+                    { 3, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7982), "sorunsallar", null },
+                    { 4, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7984), "#spor", null },
+                    { 5, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7985), "#ilişkiler", null },
+                    { 6, new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7989), "#siyaset", null }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId", "AppUserId" },
+                values: new object[] { 1, 1, null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId", "AppUserId" },
+                values: new object[] { 1, 2, null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId", "AppUserId" },
+                values: new object[] { 1004, 3, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -325,6 +363,11 @@ namespace GaripSozluk.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_AppUserId",
+                table: "AspNetUserRoles",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
@@ -340,6 +383,11 @@ namespace GaripSozluk.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BlockedUsers_BlockedUserId",
+                table: "BlockedUsers",
+                column: "BlockedUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BlockedUsers_UserId",

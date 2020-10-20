@@ -26,7 +26,7 @@ namespace GaripSozluk.Api.Controllers
         [HttpGet]
         public IList<HeaderRowVM> GetAll()
         {
-            return _headerService.GetAllHeaders();
+            return _headerService.GetAllHeaders(HttpContext.User);
         }
     }
 }
