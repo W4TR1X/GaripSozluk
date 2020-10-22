@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using GaripSozluk.Business.Interfaces;
 using GaripSozluk.Business.Services;
+using GaripSozluk.Common.Extensions;
+using GaripSozluk.Common.HealthChecks;
 using GaripSozluk.Data;
 using GaripSozluk.Data.Domain;
 using GaripSozluk.Data.Interfaces;
 using GaripSozluk.Data.Repositories;
 using Hangfire;
 using Hangfire.SqlServer;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +38,10 @@ namespace GaripSozluk.Api
             var appConnectionString = Configuration.GetConnectionString("AppDatabase");
             var logConnectionString = Configuration.GetConnectionString("LogDatabase");
             var hangfireConnectionString = Configuration.GetConnectionString("HangfireDatabase");
+            var healthchecksConnectionString = Configuration.GetConnectionString("HealthchecksDatabase");
 
+            services.AddAppHealthChecks(healthchecksConnectionString);
+       
             services.AddDbContext<GaripSozlukDbContext>(options => options.UseSqlServer(appConnectionString))
                     .AddDbContext<GaripSozlukLogDbContext>(options => options.UseNpgsql(logConnectionString));
 
@@ -119,6 +126,13 @@ namespace GaripSozluk.Api
             {
                 endpoints.MapControllers();
                 endpoints.MapHangfireDashboard();
+
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
 
             app.UseHangfireDashboard();
