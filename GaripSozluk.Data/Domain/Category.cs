@@ -8,7 +8,7 @@ namespace GaripSozluk.Data.Domain
     {
         public string Title { get; set; }
 
-
+        public string IdCode { get; set; }
 
         public ICollection<Header> Headers { get; set; }
     }

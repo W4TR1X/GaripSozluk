@@ -39,12 +39,12 @@ namespace GaripSozluk.WebApp.Controllers
             _userService = userService;
         }
 
-        public IActionResult AddHeader(int categoryId)
+        public IActionResult AddHeader(string categoryCode)
         {
             ViewBag.CategorySelectItemList = _categoryService.GetCategoriesOptionList();
 
             var model = new NewHeaderVM();
-            model.CategoryId = categoryId;
+            model.CategoryCode = categoryCode;
 
             return View(model);
         }
@@ -56,7 +56,7 @@ namespace GaripSozluk.WebApp.Controllers
             {
                 if (_headerService.AddNewHeader(HttpContext.User, model))
                 {
-                    return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = model.HeaderId }));
+                    return Redirect(this.Action<HomeController>(nameof(Index), new { categoryCode = model.CategoryCode, headerCode = model.HeaderCode }));
                 }
             }
 
@@ -65,10 +65,11 @@ namespace GaripSozluk.WebApp.Controllers
             return View(model);
         }
 
-        public IActionResult AddPost(int headerId)
+        public IActionResult AddPost(string CategoryCode, string headerCode)
         {
             var model = new NewPostVM();
-            model.HeaderId = headerId;
+            model.HeaderCode = headerCode;
+            model.CategoryCode = CategoryCode;
 
             return View(model);
         }
@@ -80,23 +81,23 @@ namespace GaripSozluk.WebApp.Controllers
             {
                 if (_headerService.AddNewPost(HttpContext.User, model))
                 {
-                    return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = model.HeaderId }));
+                    return Redirect(this.Action<HomeController>(nameof(Index), new { categoryCode = model.CategoryCode, headerCode = model.HeaderCode }));
                 }
             }
 
             return View(model);
         }
 
-        public IActionResult UpVote(int headerId, int postId, int pageNumber)
+        public IActionResult UpVote(string categoryCode, string headerCode, int postId, int pageNumber)
         {
             _postService.UpVote(HttpContext.User, postId);
-            return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = headerId, pageNumber = pageNumber }));
+            return Redirect(this.Action<HomeController>(nameof(Index), new { categoryCode = categoryCode, headerCode = headerCode, pageNumber = pageNumber }));
         }
 
-        public IActionResult DownVote(int headerId, int postId, int pageNumber)
+        public IActionResult DownVote(string categoryCode, string headerCode, int postId, int pageNumber)
         {
             _postService.DownVote(HttpContext.User, postId);
-            return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = headerId, pageNumber = pageNumber }));
+            return Redirect(this.Action<HomeController>(nameof(Index), new { categoryCode = categoryCode, headerCode = headerCode, pageNumber = pageNumber }));
         }
     }
 }

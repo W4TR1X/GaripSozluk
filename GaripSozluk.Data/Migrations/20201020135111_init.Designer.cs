@@ -22,608 +22,608 @@ namespace GaripSozluk.Data.Migrations
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.AppRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("NormalizedName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                b.HasIndex("NormalizedName")
+                    .IsUnique()
+                    .HasName("RoleNameIndex")
+                    .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                b.ToTable("AspNetRoles");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConcurrencyStamp = "77907242-0a05-44a3-a8fd-11f9c7ea55c8",
-                            CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ConcurrencyStamp = "170af3e6-1845-4573-81b8-3bcff2393c59",
-                            CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ConcurrencyStamp = "00afa7c3-082e-4430-9f50-05ccca48feaf",
-                            CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Bot",
-                            NormalizedName = "BOT"
-                        });
-                });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        ConcurrencyStamp = "77907242-0a05-44a3-a8fd-11f9c7ea55c8",
+                        CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Name = "User",
+                        NormalizedName = "USER"
+                    },
+                    new
+                    {
+                        Id = 2,
+                        ConcurrencyStamp = "170af3e6-1845-4573-81b8-3bcff2393c59",
+                        CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Name = "Admin",
+                        NormalizedName = "ADMIN"
+                    },
+                    new
+                    {
+                        Id = 3,
+                        ConcurrencyStamp = "00afa7c3-082e-4430-9f50-05ccca48feaf",
+                        CreateDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        Name = "Bot",
+                        NormalizedName = "BOT"
+                    });
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.AppUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                b.Property<int>("AccessFailedCount")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("BirthDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                b.Property<bool>("EmailConfirmed")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                b.Property<bool>("LockoutEnabled")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset?>("LockoutEnd")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("NormalizedEmail")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("NormalizedUserName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PasswordHash")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                b.Property<bool>("PhoneNumberConfirmed")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SecurityStamp")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                b.Property<bool>("TwoFactorEnabled")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                b.Property<string>("UserName")
+                    .HasColumnType("nvarchar(256)")
+                    .HasMaxLength(256);
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                b.HasIndex("NormalizedEmail")
+                    .HasName("EmailIndex");
 
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                b.HasIndex("NormalizedUserName")
+                    .IsUnique()
+                    .HasName("UserNameIndex")
+                    .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                b.ToTable("AspNetUsers");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessFailedCount = 0,
-                            BirthDate = new DateTime(1986, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "f3a1e6ab-3c15-43ef-87d7-d83c22285d13",
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 111, DateTimeKind.Local).AddTicks(9817),
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "MUSTAFA",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK3yu3mkq1NvQOijcZ0u1cvomfFXZNVO65sjGbjZcEjY1tNKYJ9VyEcG1vZ9TbY82A==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "RZUW3UX54HAWZUMZGYM2Y3J3XG4R7FE3",
-                            TwoFactorEnabled = false,
-                            UserName = "Mustafa"
-                        },
-                        new
-                        {
-                            Id = 1004,
-                            AccessFailedCount = 0,
-                            BirthDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3196),
-                            ConcurrencyStamp = "dffe6722-61d7-4b3d-8561-4291e0695601",
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3243),
-                            EmailConfirmed = false,
-                            LockoutEnabled = true,
-                            LockoutEnd = new DateTimeOffset(new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Unspecified).AddTicks(9999), new TimeSpan(0, 3, 0, 0, 0)),
-                            NormalizedUserName = "HANGFIREBOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "XXMPKO5EG2J4S353GLJVNDBUK3JYJXET",
-                            TwoFactorEnabled = false,
-                            UserName = "HangfireBot"
-                        });
-                });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        AccessFailedCount = 0,
+                        BirthDate = new DateTime(1986, 5, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                        ConcurrencyStamp = "f3a1e6ab-3c15-43ef-87d7-d83c22285d13",
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 111, DateTimeKind.Local).AddTicks(9817),
+                        EmailConfirmed = false,
+                        LockoutEnabled = false,
+                        NormalizedUserName = "MUSTAFA",
+                        PasswordHash = "AQAAAAEAACcQAAAAEK3yu3mkq1NvQOijcZ0u1cvomfFXZNVO65sjGbjZcEjY1tNKYJ9VyEcG1vZ9TbY82A==",
+                        PhoneNumberConfirmed = false,
+                        SecurityStamp = "RZUW3UX54HAWZUMZGYM2Y3J3XG4R7FE3",
+                        TwoFactorEnabled = false,
+                        UserName = "Mustafa"
+                    },
+                    new
+                    {
+                        Id = 1004,
+                        AccessFailedCount = 0,
+                        BirthDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3196),
+                        ConcurrencyStamp = "dffe6722-61d7-4b3d-8561-4291e0695601",
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(3243),
+                        EmailConfirmed = false,
+                        LockoutEnabled = true,
+                        LockoutEnd = new DateTimeOffset(new DateTime(9999, 12, 31, 23, 59, 59, 999, DateTimeKind.Unspecified).AddTicks(9999), new TimeSpan(0, 3, 0, 0, 0)),
+                        NormalizedUserName = "HANGFIREBOT",
+                        PasswordHash = "AQAAAAEAACcQAAAAEK6DMSeekLJRwfEXfIbtkz5V4kOfyFabsyi+rkOSX6OzoOAYvTTOj+vnqsNMoOowLQ==",
+                        PhoneNumberConfirmed = false,
+                        SecurityStamp = "XXMPKO5EG2J4S353GLJVNDBUK3JYJXET",
+                        TwoFactorEnabled = false,
+                        UserName = "HangfireBot"
+                    });
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.BlockedUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BlockedUserId")
-                        .HasColumnType("int");
+                b.Property<int>("BlockedUserId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("BlockedUserId");
+                b.HasIndex("BlockedUserId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("BlockedUsers");
-                });
+                b.ToTable("BlockedUsers");
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(50)")
+                    .HasMaxLength(50);
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                b.ToTable("Categories");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7131),
-                            Title = "gündem"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7933),
-                            Title = "debe"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7982),
-                            Title = "sorunsallar"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7984),
-                            Title = "#spor"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7985),
-                            Title = "#ilişkiler"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7989),
-                            Title = "#siyaset"
-                        });
-                });
+                b.HasData(
+                    new
+                    {
+                        Id = 1,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7131),
+                        Title = "gündem"
+                    },
+                    new
+                    {
+                        Id = 2,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7933),
+                        Title = "debe"
+                    },
+                    new
+                    {
+                        Id = 3,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7982),
+                        Title = "sorunsallar"
+                    },
+                    new
+                    {
+                        Id = 4,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7984),
+                        Title = "#spor"
+                    },
+                    new
+                    {
+                        Id = 5,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7985),
+                        Title = "#ilişkiler"
+                    },
+                    new
+                    {
+                        Id = 6,
+                        CreateDate = new DateTime(2020, 10, 20, 16, 51, 11, 114, DateTimeKind.Local).AddTicks(7989),
+                        Title = "#siyaset"
+                    });
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.Header", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                b.Property<int>("CategoryId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("ClickCount")
-                        .HasColumnType("int");
+                b.Property<int>("ClickCount")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAdminOnly")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                b.Property<bool>("IsAdminOnly")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                b.Property<string>("Title")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(100)")
+                    .HasMaxLength(100);
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                b.HasIndex("CategoryId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("Headers");
-                });
+                b.ToTable("Headers");
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.Post", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                b.Property<string>("Content")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(2000)")
+                    .HasMaxLength(2000);
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("HeaderId")
-                        .HasColumnType("int");
+                b.Property<int>("HeaderId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("HeaderId");
+                b.HasIndex("HeaderId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
-                });
+                b.ToTable("Posts");
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.PostRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsLiked")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsLiked")
+                    .HasColumnType("bit");
 
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
+                b.Property<int>("PostId")
+                    .HasColumnType("int");
 
-                    b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("UpdateDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("PostId");
+                b.HasIndex("PostId");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("PostRatings");
-                });
+                b.ToTable("PostRatings");
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                b.Property<int>("RoleId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
-                });
+                b.ToTable("AspNetRoleClaims");
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int")
+                    .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
-                });
+                b.ToTable("AspNetUserClaims");
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+            {
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                b.Property<string>("ProviderKey")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ProviderDisplayName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("LoginProvider", "ProviderKey");
+                b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("UserId");
+                b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
-                });
+                b.ToTable("AspNetUserLogins");
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                b.Property<int>("RoleId")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("AppUserId")
-                        .HasColumnType("int");
+                b.Property<int?>("AppUserId")
+                    .HasColumnType("int");
 
-                    b.HasKey("UserId", "RoleId");
+                b.HasKey("UserId", "RoleId");
 
-                    b.HasIndex("AppUserId");
+                b.HasIndex("AppUserId");
 
-                    b.HasIndex("RoleId");
+                b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                b.ToTable("AspNetUserRoles");
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1004,
-                            RoleId = 3
-                        },
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 2
-                        });
-                });
+                b.HasData(
+                    new
+                    {
+                        UserId = 1004,
+                        RoleId = 3
+                    },
+                    new
+                    {
+                        UserId = 1,
+                        RoleId = 1
+                    },
+                    new
+                    {
+                        UserId = 1,
+                        RoleId = 2
+                    });
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+            {
+                b.Property<int>("UserId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Value")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
-                });
+                b.ToTable("AspNetUserTokens");
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.BlockedUser", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
-                        .WithMany("BlockedUsers")
-                        .HasForeignKey("BlockedUserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
+                    .WithMany("BlockedUsers")
+                    .HasForeignKey("BlockedUserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "Blocked")
-                        .WithMany("BlockedBy")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", "Blocked")
+                    .WithMany("BlockedBy")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.Header", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.Category", "Category")
-                        .WithMany("Headers")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("GaripSozluk.Data.Domain.Category", "Category")
+                    .WithMany("Headers")
+                    .HasForeignKey("CategoryId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
-                        .WithMany("Headers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
+                    .WithMany("Headers")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.Post", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.Header", "Header")
-                        .WithMany("Posts")
-                        .HasForeignKey("HeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("GaripSozluk.Data.Domain.Header", "Header")
+                    .WithMany("Posts")
+                    .HasForeignKey("HeaderId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
+                    .WithMany("Posts")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("GaripSozluk.Data.Domain.PostRating", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.Post", "Post")
-                        .WithMany("Ratings")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.HasOne("GaripSozluk.Data.Domain.Post", "Post")
+                    .WithMany("Ratings")
+                    .HasForeignKey("PostId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
-                        .WithMany("Ratings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", "User")
+                    .WithMany("Ratings")
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("AppUserId");
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                    .WithMany("Roles")
+                    .HasForeignKey("AppUserId");
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("GaripSozluk.Data.Domain.AppRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-                {
-                    b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.HasOne("GaripSozluk.Data.Domain.AppUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 #pragma warning restore 612, 618
         }
     }

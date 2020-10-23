@@ -12,7 +12,10 @@ namespace GaripSozluk.Common.ViewModels.Post
     {
 
         [HiddenInput]
-        public int HeaderId { get; set; }
+        public string HeaderCode { get; set; }  
+        
+        [HiddenInput]
+        public string CategoryCode { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(2000)]

@@ -7,8 +7,8 @@ namespace GaripSozluk.Common.ViewModels.Post
 {
     public class PostHeaderVM
     {
-        public int CategoryId { get; set; }
-        public int HeaderId { get; set; }
+        public string CategoryCode { get; set; }
+        public string HeaderCode { get; set; }
         public int UserId { get; set; }
         public string Username { get; set; }
 

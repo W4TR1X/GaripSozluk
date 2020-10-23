@@ -50,7 +50,7 @@ namespace GaripSozluk.Data
                 new AppRole("Bot"){ Id=3, NormalizedName="BOT" }
             });
 
-            builder.Entity<AppUser>().HasData(new List<AppUser>() 
+            builder.Entity<AppUser>().HasData(new List<AppUser>()
             {
                 new AppUser()
                 {
@@ -76,7 +76,7 @@ namespace GaripSozluk.Data
                 new AppUser()
                 {
                     Id=1004,
-                    UserName="HangfireBot", 
+                    UserName="HangfireBot",
                     NormalizedUserName="HANGFIREBOT" ,
                     Email=null,
                     NormalizedEmail=null,
@@ -104,12 +104,12 @@ namespace GaripSozluk.Data
 
             builder.Entity<Category>().HasData(new List<Category>
             {
-                new Category(){ Id=1, CreateDate=DateTime.Now, Title="gündem"},
-                new Category(){ Id=2, CreateDate=DateTime.Now, Title="debe"},
-                new Category(){ Id=3, CreateDate=DateTime.Now, Title="sorunsallar"},
-                new Category(){ Id=4, CreateDate=DateTime.Now, Title="#spor"},
-                new Category(){ Id=5, CreateDate=DateTime.Now, Title="#ilişkiler"},
-                new Category(){ Id=6, CreateDate=DateTime.Now, Title="#siyaset"}
+                new Category(){ Id=1, CreateDate=DateTime.Now, Title="gündem", IdCode="gundem"},
+                new Category(){ Id=2, CreateDate=DateTime.Now, Title="debe",IdCode="debe"},
+                new Category(){ Id=3, CreateDate=DateTime.Now, Title="sorunsallar",IdCode="sorunsallar"},
+                new Category(){ Id=4, CreateDate=DateTime.Now, Title="#spor",IdCode="spor"},
+                new Category(){ Id=5, CreateDate=DateTime.Now, Title="#ilişkiler",IdCode="iliskiler"},
+                new Category(){ Id=6, CreateDate=DateTime.Now, Title="#siyaset",IdCode="siyaset"}
             });
         }
     }

@@ -1,18 +1,28 @@
 ﻿@inject ICategoryService CategoryService
 @inject IHeaderService HeaderService
-@{ int headerId = 0;
+@{
 
-    if (Context.Request.Query.ContainsKey("headerId"))
+    var pathParts = Context.Request.Path.ToString().Split("/").ToList();
+    pathParts = pathParts.Where(x => x != string.Empty).ToList();
+
+    string headerCode = "";
+
+    if (pathParts.Count > 3)
     {
-        int.TryParse(Context.Request.Query["headerId"].ToString(), out headerId);
+        headerCode = pathParts[3];
     }
 
-    int categoryId = headerId == 0 ? 1 : (HeaderService.GetHeaderById(User, headerId)?.CategoryId ?? 1);
+    string categoryCode = "";
 
-    if (Context.Request.Query.ContainsKey("categoryId"))
+    if (pathParts.Count > 2)
     {
-        int.TryParse(Context.Request.Query["categoryId"].ToString(), out categoryId);
-    } }
+        categoryCode = pathParts[2];
+    }
+    else
+    {
+        categoryCode = CategoryService.GetCategoryIdCodeById(0);
+    }
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,8 +45,8 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="CategoryId" value="@(categoryId>0?categoryId.ToString():"")" />
-                        <input type="hidden" name="HeaderId" value="@(headerId>0?headerId.ToString():"")" />
+                        <input type="hidden" name="CategoryId" value="@(categoryCode)" />
+                        <input type="hidden" name="HeaderId" value="@(headerCode)" />
                         <input type="hidden" name="PageNumber" value="1" />
                         <div class="form-group">
                             <input type="text" class="form-control" data-val="true" name="SearchText" placeholder="Arama yap..." required>
@@ -88,8 +98,8 @@
                 <div class="input-group">
                     <input type="text" class="form-control" data-val="true" name="SearchText" placeholder="Arama yap...">
 
-                    <input type="hidden" name="CategoryId" value="@(categoryId>0?categoryId.ToString():"")" />
-                    <input type="hidden" name="HeaderId" value="@(headerId>0?headerId.ToString():"")" />
+                    <input type="hidden" name="CategoryId" value="@(categoryCode)" />
+                    <input type="hidden" name="HeaderId" value="@(headerCode)" />
                     <input type="hidden" name="PageNumber" value="1" />
 
                     <div class="dropdown input-group-append">
@@ -106,16 +116,16 @@
                 <li>
                     <div class="input-group">
                         <div class="input-group-append mx-auto">
-                            <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random">Rastgele</a>
+                            <a class="nav-link mr-2" style="width:80px" asp-controller="Home" asp-action="Random" asp-route-categoryCode="@categoryCode">Rastgele</a>
                             @if (Context.User.Identity.IsAuthenticated)
                             {
-                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryId="@categoryId">Yeni Başlık Ekle</a>
+                                <a class="text-warning nav-link mr-2" asp-controller="Post" asp-action="AddHeader" asp-route-categoryCode="@categoryCode">Yeni Başlık Ekle</a>
                                 <a class="nav-link text-white mr-2" asp-controller="Account" asp-action="GetBlockedUsersList">@(Context.User.Identity.Name)</a>
-                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a> }
-                                            else
-                                            {
+                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Logout">Çıkış</a> }
+                            else
+                            {
                                 <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>}
+                                <a class="nav-link mr-2" style="width:80px" asp-controller="Account" asp-action="Register">Kaydol</a>}
                         </div>
                     </div>
                 </li>
@@ -135,14 +145,14 @@
                     }
 
                     <li class="nav-item">
-                    @if (headerId > 0)
-                    {
-                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key" asp-route-HeaderId="@headerId">@Html.Raw(categoryText)</a> 
-                    }
-                    else
-                    {
-                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-CategoryId="@category.Key">@Html.Raw(categoryText)</a>
-                    }
+                        @if (headerCode != "")
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-categoryCode="@category.Key" asp-route-HeaderCode="@headerCode">@Html.Raw(categoryText)</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Index" asp-route-categoryCode="@category.Key">@Html.Raw(categoryText)</a>
+                        }
                     </li>
                 }
             </ul>
@@ -154,20 +164,20 @@
             {
                 <div class="col-md-4 col-lg-3 border-right overflow-hidden">
                     <p class="text-muted mt-3 ml-8">
-                        <a class="btn btn-light bg-white" asp-controller="Home" asp-action="Index" asp-route-categoryId="@categoryId">
-                            @CategoryService.GetCategoryNameById(categoryId)
+                        <a class="btn btn-light bg-white" asp-controller="Home" asp-action="Index" asp-route-categoryCode="@categoryCode">
+                            @CategoryService.GetCategoryNameByIdCode(categoryCode)
                         </a>
                     </p>
                     <div class="pl-2">
                         <ul class="list-group">
-                            @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryId))
+                            @foreach (var item in HeaderService.GetHeadersByCategoryId(User, categoryCode))
                             {
                                 <li class="list-group-item border-0 m-1 p-1">
-                                    <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center" asp-controller="Home" asp-action="Index" asp-route-headerId="@item.HeaderId" asp-route-categoryId="@categoryId">
-                                    @item.Title
-                                    @if (item.PostCount > 0)
-                                    {
-                                        <span class="badge badge-success badge-pill">@item.PostCount</span>}
+                                    <a class="btn btn-light btn-block text-left bg-white d-flex justify-content-between align-items-center" asp-controller="Home" asp-action="Index" asp-route-HeaderCode="@item.HeaderCode" asp-route-categoryCode="@categoryCode">
+                                        @item.Title
+                                        @if (item.PostCount > 0)
+                                        {
+                                            <span class="badge badge-success badge-pill">@item.PostCount</span>}
                                     </a>
                                 </li>
                             }

@@ -100,7 +100,12 @@ namespace GaripSozluk.WebApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{categoryCode?}/{headerCode?}/{pageNumber?}");
+
+                //endpoints.MapControllerRoute(
+                //    name: "default",
+                //    pattern: "{categoryCode?}/{headerCode?}/{pageNumber?}",
+                //    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }

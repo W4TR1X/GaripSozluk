@@ -16,15 +16,28 @@ namespace GaripSozluk.Business.Services
             _categoryRepository = categorytRepository;
         }
 
-        public IList<KeyValuePair<int, string>> GetCategories()
+        public IList<KeyValuePair<string, string>> GetCategories()
         {
-            return _categoryRepository.GetAll().Select(x => new KeyValuePair<int, string>(x.Id, x.Title)).ToList();
+            return _categoryRepository.GetAll().Select(x => new KeyValuePair<string, string>(x.IdCode, x.Title)).ToList();
         }
 
         //ToDo: OK! Public Servis methodlarına küçük harfle başlanmaz.
-        public string GetCategoryNameById(int categoryId)
+        public string GetCategoryNameByIdCode(string categoryCode)
         {
-            return _categoryRepository.Get(x => x.Id == categoryId).Title;
+            if (categoryCode == "")
+            {
+                return _categoryRepository.GetAll().First().Title;
+            }
+            return _categoryRepository.Get(x => x.IdCode == categoryCode).Title;
+        }
+
+        public string GetCategoryIdCodeById(int categoryId)
+        {
+            if (categoryId == 0)
+            {
+                return _categoryRepository.GetAll().First().IdCode;
+            }
+            return _categoryRepository.Get(x => x.Id == categoryId).IdCode;
         }
 
         public List<SelectListItem> GetCategoriesOptionList()
@@ -36,5 +49,7 @@ namespace GaripSozluk.Business.Services
             });
             return items;
         }
+
+
     }
 }

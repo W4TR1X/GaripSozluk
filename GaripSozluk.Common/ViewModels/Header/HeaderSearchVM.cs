@@ -15,8 +15,8 @@ namespace GaripSozluk.Common.ViewModels.Header
         public bool InvertOrder { get; set; }
 
 
-        public int? CategoryId { get; set; }
-        public int? HeaderId { get; set; }
+        public int? CategoryCode { get; set; }
+        public int? HeaderCode { get; set; }
         public int PageNumber { get; set; }
     }
 }

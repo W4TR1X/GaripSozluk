@@ -21,7 +21,7 @@ namespace GaripSozluk.WebApp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHeaderService _headerService;
         private readonly ICategoryService _categoryService;
-        
+
         public HomeController(ILogger<HomeController> logger,
             ICategoryService categoryService,
             IHeaderService headerService)
@@ -32,17 +32,17 @@ namespace GaripSozluk.WebApp.Controllers
         }
 
         [AllowAnonymous]
-        public IActionResult Index(int? categoryId = null, int? headerId = null, int pageNumber = 1)
+        public IActionResult Index(string categoryCode = "", string headerCode = "", int pageNumber = 1)
         {
             _logger.LogDebug("Home>Index");
 
-            if (headerId.HasValue)
+            if (headerCode != "")
             {
-                return View(_headerService.GetHeaderPosts(HttpContext.User, headerId.Value, categoryId, pageNumber));
+                return View(_headerService.GetHeaderPosts(HttpContext.User, headerCode, categoryCode, pageNumber));
             }
-            else if (categoryId.HasValue)
+            else if (categoryCode != "")
             {
-                return View(_headerService.GetPopularHeaders(HttpContext.User, categoryId.Value));
+                return View(_headerService.GetPopularHeaders(HttpContext.User, categoryCode));
             }
             else
             {
@@ -59,21 +59,19 @@ namespace GaripSozluk.WebApp.Controllers
                 return View(_headerService.Search(HttpContext.User, searchModel));
             }
 
-            return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = searchModel.HeaderId, categoryId = searchModel.CategoryId, pageNumber = searchModel.PageNumber }));
+            return Redirect(this.Action<HomeController>(nameof(Index), new { headerCode = searchModel.HeaderCode, categoryCode = searchModel.CategoryCode, pageNumber = searchModel.PageNumber }));
         }
 
-        public IActionResult Random()
+        public IActionResult Random(string categoryCode = "")
         {
-            _logger.LogDebug("Home>Index");
-
-            return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = _headerService.GetRandomHeaderIndex(HttpContext.User) }));
+            return Redirect(this.Action<HomeController>(nameof(Index), new { categoryCode = categoryCode, headerCode = _headerService.GetRandomHeaderIdCode(HttpContext.User) }));
         }
 
         [AllowAnonymous]
         public IActionResult ApiHeaderList()
         {
             return View();
-        }         
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

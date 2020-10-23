@@ -13,21 +13,21 @@ namespace GaripSozluk.Business.Interfaces
 {
     public interface IHeaderService
     {
-        IList<HeaderRowVM> GetHeadersByCategoryId(ClaimsPrincipal contextUser, int categoryId);
+        IList<HeaderRowVM> GetHeadersByCategoryId(ClaimsPrincipal contextUser, string categoryCode);
 
         IList<HeaderRowVM> GetAllHeaders(ClaimsPrincipal contextUser);
 
-        Header GetHeaderById(ClaimsPrincipal contextUser, int id);
+        Header GetHeaderById(ClaimsPrincipal contextUser, string headerCode);
 
-        PostHeaderListVM GetHeaderPosts(ClaimsPrincipal user, int headerId, int? categoryId, int PageNumber = 1);
+        PostHeaderListVM GetHeaderPosts(ClaimsPrincipal user, string headerCode, string categoryCode, int PageNumber = 1);
 
-        PostHeaderListVM GetPopularHeaders(ClaimsPrincipal user, int categoryId = 1);
+        PostHeaderListVM GetPopularHeaders(ClaimsPrincipal user, string categoryCode = "");
 
         bool AddNewHeader(ClaimsPrincipal contextUser, NewHeaderVM model);
 
         bool AddNewPost(ClaimsPrincipal contextUser, NewPostVM model);
 
-        int GetRandomHeaderIndex(ClaimsPrincipal contextUser);
+        string GetRandomHeaderIdCode(ClaimsPrincipal contextUser);
 
         PostHeaderListVM Search(ClaimsPrincipal contextUser, HeaderSearchVM searchModel);
 

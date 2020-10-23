@@ -4,14 +4,16 @@ using GaripSozluk.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GaripSozluk.Data.Migrations
 {
     [DbContext(typeof(GaripSozlukDbContext))]
-    partial class GaripSozlukDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201022205444_from id to idcode for navigation")]
+    partial class fromidtoidcodefornavigation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

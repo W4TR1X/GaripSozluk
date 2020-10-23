@@ -12,7 +12,9 @@
         <form asp-controller="Post" asp-action="AddPost">
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <input asp-for="HeaderId" />
+            <input asp-for="HeaderCode" />
+            <input asp-for="CategoryCode" />
+
             <input asp-for="Status" />
 
             <div class="form-group">

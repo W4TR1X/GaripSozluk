@@ -11,7 +11,7 @@ namespace GaripSozluk.Common.ViewModels.Header
     public class NewHeaderVM : NewPostVM
     {
         [DisplayName("Kategori")]
-        public int CategoryId { get; set; }
+        public string CategoryCode { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(100)]

@@ -7,9 +7,10 @@ namespace GaripSozluk.Business.Interfaces
 {
     public interface ICategoryService
     {
-        IList<KeyValuePair<int, string>> GetCategories();
+        IList<KeyValuePair<string, string>> GetCategories();
 
-        string GetCategoryNameById(int categoryId);
+        string GetCategoryNameByIdCode(string categoryCode);
+        string GetCategoryIdCodeById(int categoryId);
         List<SelectListItem> GetCategoriesOptionList();
     }
 }

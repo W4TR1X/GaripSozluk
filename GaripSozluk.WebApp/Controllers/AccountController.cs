@@ -69,13 +69,13 @@ namespace GaripSozluk.WebApp.Controllers
         }
 
         [Authorize]
-        public IActionResult BlockUser(int blockedUserId, int headerId)
+        public IActionResult BlockUser(int blockedUserId, string headerCode)
         {
 
             var contextUser = HttpContext.User;
             _userService.BlockUser(contextUser, blockedUserId);
 
-            return Redirect(this.Action<HomeController>(nameof(Index), new { headerId = headerId }));
+            return Redirect(this.Action<HomeController>(nameof(Index), new { headerCode = headerCode }));
         }
 
         public IActionResult LostPassword()
